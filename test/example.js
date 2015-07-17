@@ -1,6 +1,7 @@
 /*jshint esnext:true, node: true */
 "use strict";
-let r = require('../driver');
+//let r = require('../driver');
+let r = require('rethinkdb');
 
 r.connect({
   port: 8124
@@ -8,7 +9,7 @@ r.connect({
  .then(function (conn) {
    r.dbList().run(conn);
    r.dbList().run(conn);
-   r.dbList().run(conn);
+   //r.dbList().run(conn);
    return r.dbList()
    .do(function (tableList) {
       return tableList.count();
