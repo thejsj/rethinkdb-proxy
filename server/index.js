@@ -18,45 +18,16 @@ var server = net.createServer(function(c) { //'connection' listener
       var buf = new Buffer(8);
       buf.write('SUCCESS');
       console.log('Connected');
-      c.write(buf, function () {
-        c.connected = true;
-      });
+      c.connected = true;
+      c.write(buf);
     } else if (true) {
-      if (Buffer.byteLength(data) === 8) {
-        console.log('1. Query Token', Buffer.byteLength(data), data.readUInt32LE());
-        // Add query token to our queries
-        queries[data.readUInt32LE()] = {
-          token: data
-        };
-        lastQueryToken = data.readUInt32LE();
-      } else if (Buffer.byteLength(data) === 4) {
-        console.log('2. TokenId');
-        console.log(Buffer.byteLength(data));
-        queries[lastQueryToken].length = data.readUInt32LE();
-      } else {
-        console.log('3. Query', Buffer.byteLength(data));
-        //var bufferLength = Buffer.byteLength(data);
-        //if (bufferLength === queries[lastQueryToken].length) {
-          var str = data.toString('utf8');
-          console.log('str', str);
-          //console.log(JSON.parse(str));
-          //c.write(new Buffer(JSON.stringify({
-            //t: 1,
-            //r: ['foo']
-          //})));
-        //}
+      console.log(data.toString().split());
+      if (Buffer.byteLength(data) > 10) {
+        c.write({
+          t: 1,
+          p: 'foo'
+        });
       }
-      /*!
-       * After the initial connection, we'll get a buffer with some stuff
-       * that we need to save
-       */
-    } else {
-      // All queries have a token/signature/SOMETHING at the beginning of the query
-      var query = data.toString().trim();
-      console.log('This is a query');
-      //console.log(query.split(''));
-      var buff = new Buffer([ 'a', 'b', 'c' ]);
-      //c.write(buff);
     }
     console.log('  Byte Length:', Buffer.byteLength(data));
   });

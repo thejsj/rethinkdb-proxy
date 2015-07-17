@@ -625,9 +625,10 @@
       lengthBuffer = new Buffer(4);
       lengthBuffer.writeUInt32LE(chunk.length, 0);
       console.log('2. Send Length', Buffer.byteLength(lengthBuffer));
-      this.rawSocket.write(lengthBuffer);
       console.log('3. Send Chunk', Buffer.byteLength(chunk));
-      return this.rawSocket.write(chunk);
+      this.rawSocket.write(chunk);
+      this.rawSocket.write(lengthBuffer);
+      return;
     };
 
     return TcpConnection;
