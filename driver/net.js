@@ -108,16 +108,13 @@
         token = this.buffer.readUInt32LE(0) + 0x100000000 * this.buffer.readUInt32LE(4);
         responseLength = this.buffer.readUInt32LE(8);
         if (!(this.buffer.length >= (12 + responseLength))) {
-          console.log('break');
           break;
         }
         responseBuffer = this.buffer.slice(12, responseLength + 12);
         response = JSON.parse(responseBuffer);
-        console.log('response', response);
         this._processResponse(response, token);
         results.push(this.buffer = this.buffer.slice(12 + responseLength));
       }
-      console.log('results', results);
       return results;
     };
 
@@ -415,7 +412,6 @@
           opts: opts
         };
       }
-      console.log('Send Query', JSON.stringify(query));
       this._sendQuery(query);
       if ((opts.noreply != null) && opts.noreply && typeof cb === 'function') {
         return cb(null);
@@ -494,7 +490,6 @@
       })(this));
       this.rawSocket.once('connect', (function(_this) {
         return function() {
-          console.log('Connect');
           var auth_buffer, auth_length, handshake_callback, protocol, version;
           version = new Buffer(4);
           version.writeUInt32LE(protoVersion, 0);
@@ -503,8 +498,9 @@
           auth_length.writeUInt32LE(auth_buffer.length, 0);
           protocol = new Buffer(4);
           protocol.writeUInt32LE(protoProtocol, 0);
-          console.log('- 1 - protoVersion', protoVersion);
-          _this.rawSocket.write(Buffer.concat([version, auth_length, auth_buffer, protocol]));
+          var token = Buffer.concat([version, auth_length, auth_buffer, protocol]);
+          console.log(token.readUInt32LE());
+          _this.rawSocket.write(token);
           handshake_callback = function(buf) {
             var b, i, j, len, ref, status_buf, status_str;
             _this.buffer = Buffer.concat([_this.buffer, buf]);
@@ -519,7 +515,6 @@
                 clearTimeout(timeout);
                 if (status_str === "SUCCESS") {
                   _this.rawSocket.on('data', function(buf) {
-                    console.log('DATA RECEVIED', buf.toString());
                     return _this._data(buf);
                   });
                   _this.emit('connect');
@@ -608,6 +603,7 @@
     };
 
     TcpConnection.prototype._writeQuery = function(token, data) {
+      console.log('Token', token);
       var tokenBuf;
       tokenBuf = new Buffer(8);
       tokenBuf.writeUInt32LE(token & 0xFFFFFFFF, 0);
@@ -615,7 +611,6 @@
       /*!
        * Token corresponds to the id (in cronological order) of the query
        */
-      console.log('1. Send Token', Buffer.byteLength(tokenBuf));
       this.rawSocket.write(tokenBuf);
       return this.write(new Buffer(data));
     };
@@ -624,10 +619,8 @@
       var lengthBuffer;
       lengthBuffer = new Buffer(4);
       lengthBuffer.writeUInt32LE(chunk.length, 0);
-      console.log('2. Send Length', Buffer.byteLength(lengthBuffer));
-      console.log('3. Send Chunk', Buffer.byteLength(chunk));
-      this.rawSocket.write(chunk);
       this.rawSocket.write(lengthBuffer);
+      this.rawSocket.write(chunk);
       return;
     };
 
