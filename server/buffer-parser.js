@@ -1,14 +1,18 @@
 /*jshint esnext:true */
 
+const _listeners_ = Symbol('listeners');
+const _queue_ = Symbol('queue');
+
 const BufferParser = class BufferParser {
 
   constructor () {
-    this.queue = new Buffer(0);
+    this[_queue_] = new Buffer(0);
+    this[_listeners_] = {};
   }
 
   append (buff) {
-    this.queue = Buffer.concat([this.queue, buff]);
-    let splitString = this.queue.toString().split('');
+    this[_queue_] = Buffer.concat([this[_queue_], buff]);
+    let splitString = this[_queue_].toString().split('');
     let openBrackets = 0;
     let foundBracket = false;
     for (let i = 0; i < splitString.length; i += 1) {
@@ -20,24 +24,30 @@ const BufferParser = class BufferParser {
         openBrackets -= 1;
       }
       if (openBrackets === 0 && foundBracket) {
-        let token = this.queue.slice(0, 8).readUInt32LE();
-        let byteLength = this.queue.slice(8, 12).readUInt32LE();
-        let query = this.queue.slice(12, i + 1);
-        console.log('Token', token, 'BL', byteLength);
+        let token = this[_queue_].slice(0, 8).readUInt32LE();
+        let byteLength = this[_queue_].slice(8, 12).readUInt32LE();
+        let query = this[_queue_].slice(12, i + 1);
         if (Buffer.byteLength(query) === byteLength) {
-          console.log(query.toString());
-          try {
-            console.log(JSON.parse(query.toString()));
-          } catch (err) {
-            console.log('fails');
+          let json = JSON.parse(query.toString());
+          if (this[_listeners_].query !== undefined) {
+            this[_listeners_].query.forEach((func) => {
+              func(json, token);
+            });
           }
         }
-        if (i + 1 >= splitString.length) this.queue = new Buffer(splitString.slice(i + 1));
-        else this.queue = new Buffer(0);
+        if (i + 1 >= splitString.length) this[_queue_] = new Buffer(splitString.slice(i + 1));
+        else this[_queue_] = new Buffer(0);
         break;
       }
     }
 
+  }
+
+  on (eventName, func) {
+    if (this[_listeners_][eventName] === undefined) {
+      this[_listeners_][eventName] = [];
+    }
+    this[_listeners_][eventName].push(func);
   }
 
 };
