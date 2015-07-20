@@ -14,6 +14,18 @@ const server = net.createServer((c) => { //'connection' listener
     c.write(buff);
   });
 
+  parser.on('connect', (version, authKey, protoProtocol) => {
+    let versionBuffer = new Buffer(4);
+    versionBuffer.writeUInt32LE(version, 0);
+    let authBuffer = new Buffer(authKey, 'ascii');
+    let authLengthBuffer = new Buffer(4);
+    authLengthBuffer.writeUInt32LE(authBuffer.length, 0);
+    let protocolBuffer = new Buffer(4);
+    protocolBuffer.writeUInt32LE(protoProtocol, 0);
+    let token = Buffer.concat([versionBuffer, authLengthBuffer, authBuffer, protocolBuffer]);
+    c.clientSocket.write(token);
+  });
+
   parser.on('query', (query, token) => {
     // Write Token
     let tokenBuffer = new Buffer(8);
@@ -31,20 +43,7 @@ const server = net.createServer((c) => { //'connection' listener
     // Do Nothing
   });
 
-  c.on('data', (buff) => {
-    if (!c.connected && Buffer.byteLength(buff) === 14) {
-      /*!
-       * Check if the version number is the same in the client and in the
-       * database. This uses the proto-def file to find get the 'magic number'
-       *
-       * Send a 'SUCCESS' string if succesful.
-       */
-      c.clientSocket.write(buff);
-      return;
-    }
-    // Parse Query
-    parser.append(buff);
-  });
+  c.on('data', parser.append.bind(parser));
 });
 
 export default (port, cb) => {
