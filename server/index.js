@@ -11,13 +11,10 @@ const server = net.createServer((c) => { //'connection' listener
 
   c.clientSocket.on('data', (buff) => {
     if (buff.toString() === 'SUCCESS') c.connected = true;
-    console.log('RETURN', buff.toString());
     c.write(buff);
   });
 
   parser.on('query', (query, token) => {
-    console.log('Query', token);
-    console.log(query);
     // Write Token
     let tokenBuffer = new Buffer(8);
     tokenBuffer.writeUInt32LE(token & 0xFFFFFFFF, 0);
@@ -31,7 +28,7 @@ const server = net.createServer((c) => { //'connection' listener
   });
 
   c.on('end', () => {
-    console.log('* Client disconnected *');
+    // Do Nothing
   });
 
   c.on('data', (buff) => {
@@ -42,16 +39,15 @@ const server = net.createServer((c) => { //'connection' listener
        *
        * Send a 'SUCCESS' string if succesful.
        */
-      console.log('Write to Socket');
       c.clientSocket.write(buff);
       return;
     }
-    console.log('Append Query');
     // Parse Query
     parser.append(buff);
   });
 });
 
-server.listen(8124, () => { //'listening' listener
-  console.log('server bound');
-});
+export default (port, cb) => {
+  server.listen(port || 8125, cb);
+};
+
