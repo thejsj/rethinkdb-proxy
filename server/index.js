@@ -2,12 +2,16 @@
 const net = require('net');
 const BufferParser = require('./buffer-parser');
 
-export default (port, cb) => {
+export default (opts, cb) => {
   let server = net.createServer((c) => { //'connection' listener
     if (server.__connections === undefined) server.__connections = [];
     server.__connections.push(c);
 
     let parser = new BufferParser();
+    opts = Object.assign({
+      port: 8125,
+      readOnly: false
+    }, opts);
 
     c.connected = false;
     c.clientSocket = net.connect(28015, 'localhost');
@@ -30,6 +34,9 @@ export default (port, cb) => {
     });
 
     parser.on('query', (query, token) => {
+      if (opts.readOnly) {
+        console.log(JSON.stringify(query));
+      }
       // Write Token
       let tokenBuffer = new Buffer(8);
       tokenBuffer.writeUInt32LE(token & 0xFFFFFFFF, 0);
@@ -42,20 +49,18 @@ export default (port, cb) => {
       c.clientSocket.write(queryBuffer);
     });
 
-    c.on('end', () => {
-      // Do Nothing
-    });
-
     c.on('data', parser.append.bind(parser));
   });
 
-  server.listen(port || 8125, cb);
+  server.listen(opts.port, cb);
 
   return {
-    'close': (cb) => {
-      server.close(cb);
-      server.__connections.forEach(function (conn) {
-        conn.destroy();
+    'close': () => {
+      return new Promise(function (resolve, reject) {
+        server.close(resolve);
+        server.__connections.forEach(function (conn) {
+          conn.destroy();
+        });
       });
     }
   };
