@@ -15,13 +15,14 @@ let assertQuery = makeAssertQuery(executeQuery);
 let createDatabase = makeCreateDatabase(dbName, tableName);
 let dropDatabase = makeDropDatabase(dbName);
 
-describe('Normal Queries', () => {
+describe('Read-only Queries', () => {
 
   before((done) => {
     createDatabase()
       .then(() => {
         server = startServer({
-          port: proxyPort
+          port: proxyPort,
+          readeOnly: true
         }, done);
       });
   });
@@ -47,21 +48,9 @@ describe('Normal Queries', () => {
 
   describe('Write Queries', () => {
 
-    it('should return the same result after a write', (done) => {
+    xit('should throw an error after attempting to write to the database', (done) => {
       let get = r.db(dbName).table(tableName);
-      executeQuery(get.insert({ hello: 'world'}))
-       .then(() => {
-         return assertQuery(get.orderBy('id'));
-       })
-       .then(() => {
-         return r.connect().then((conn) => {
-           return get.count().run(conn)
-             .then((count) => {
-               //count.should.eql(2);
-             });
-         });
-       })
-       .nodeify(done);
+      executeQuery.bind(null, get.insert({ hello: 'world'})).should.throw();
     });
 
   });

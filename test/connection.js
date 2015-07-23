@@ -10,11 +10,13 @@ let server;
 describe('Connection', () => {
 
   before((done) => {
-    server = startServer(proxyPort, done);
+    server = startServer({
+      port: proxyPort
+    }, done);
   });
 
   after((done) => {
-    server.close(done);
+    server.close().then(done.bind(null, null));
   });
 
   it('should create a connection successfully', (done) => {
