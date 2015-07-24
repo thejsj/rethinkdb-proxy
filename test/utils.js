@@ -9,16 +9,20 @@ export function makeExecuteQuery (dbName, proxyPort) {
           return [r.connect({ db: dbName }), r.connect({ port: proxyPort, db: dbName })];
         })
         .spread((connA, connB) => {
-          return [query.run(connA), query.run(connB)];
-        })
-        .spread((resultA, resultB) => {
-          if (typeof resultA.toArray === 'function' && typeof resultA.each === 'function') {
-            return Promise.all([
-              resultA.toArray(),
-              resultB.toArray()
-            ]);
-          }
-          return [resultA, resultB];
+          return Promise.all([query.run(connA), query.run(connB)])
+            .spread((resultA, resultB) => {
+              if (typeof resultA.toArray === 'function' && typeof resultA.each === 'function') {
+                return Promise.all([
+                  resultA.toArray(),
+                  resultB.toArray()
+                ]);
+              }
+              return [resultA, resultB];
+            })
+            .finally(function () {
+              return Promise.all([connA.close(), connB.close()]);
+            });
+
         });
   };
 }

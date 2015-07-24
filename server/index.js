@@ -1,6 +1,7 @@
 /*jshint esnext:true */
 const net = require('net');
 const BufferParser = require('./buffer-parser');
+const protoDef = require('../driver/proto-def');
 
 export default (opts, cb) => {
   let server = net.createServer((c) => { //'connection' listener
@@ -35,7 +36,13 @@ export default (opts, cb) => {
 
     parser.on('query', (query, token) => {
       if (opts.readOnly) {
-        console.log(JSON.stringify(query));
+        let insert = new RegExp('\\[' + protoDef.Term.TermType.INSERT, 'i');
+        let jsonString = JSON.stringify(query);
+        if (jsonString.match(insert)) {
+          // This shouldn't throw an error, but rather, it should
+          // send the error through the TCP connection
+          throw new Error('Attempting to write through read-only connection');
+        }
       }
       // Write Token
       let tokenBuffer = new Buffer(8);
