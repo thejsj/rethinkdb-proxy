@@ -22,7 +22,7 @@ describe('Read-only Queries', () => {
       .then(() => {
         server = startServer({
           port: proxyPort,
-          readeOnly: true
+          readOnly: true
         }, done);
       });
   });
@@ -48,11 +48,17 @@ describe('Read-only Queries', () => {
 
   describe('Write Queries', () => {
 
-    xit('should throw an error after attempting to write to the database', (done) => {
+    it('should throw an error after attempting to write to the database', (done) => {
       let get = r.db(dbName).table(tableName);
-      executeQuery.bind(null, get.insert({ hello: 'world'})).should.throw();
+      executeQuery(get.insert({ hello: 'world' }))
+      .then(function (res) {
+        done(new Error());
+      })
+        .catch(function (err) {
+          (err instanceof Error).should.equal(true);
+          done();
+        });
     });
-
   });
 
 });
