@@ -19,6 +19,9 @@ export default (opts, cb) => {
 
     c.clientSocket.on('data', (buff) => {
       if (buff.toString() === 'SUCCESS') c.connected = true;
+      // NOTE: The socket might try to write something even if the connection
+      // is close
+      if (c.destroyed) return;
       c.write(buff);
     });
 
@@ -41,7 +44,22 @@ export default (opts, cb) => {
         if (jsonString.match(insert)) {
           // This shouldn't throw an error, but rather, it should
           // send the error through the TCP connection
-          throw new Error('Attempting to write through read-only connection');
+          let tokenBuffer = new Buffer(8);
+          tokenBuffer.writeUInt32LE(token & 0xFFFFFFFF, 0);
+          tokenBuffer.writeUInt32LE(Math.floor(token / 0xFFFFFFFF), 4);
+          let response = {
+            t: protoDef.Response.ResponseType.CLIENT_ERROR,
+            b: [],
+            n: [],
+            r: ["Cannot execute write queries"]
+          };
+          let responseBuffer = new Buffer(JSON.stringify(response));
+          let lengthBuffer = new Buffer(4);
+          lengthBuffer.writeUInt32LE(responseBuffer.length, 0);
+          if (c.destroyed) return;
+          c.write(tokenBuffer);
+          c.write(lengthBuffer);
+          c.write(responseBuffer);
         }
       }
       // Write Token
@@ -65,9 +83,11 @@ export default (opts, cb) => {
     'close': () => {
       return new Promise(function (resolve, reject) {
         server.close(resolve);
-        server.__connections.forEach(function (conn) {
-          conn.destroy();
-        });
+        setTimeout(function () {
+          server.__connections.forEach(function (conn) {
+            conn.destroy();
+          });
+        }, 100);
       });
     }
   };
