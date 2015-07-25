@@ -16,6 +16,12 @@ let executeProxyQuery = makeExecuteProxyQuery(dbName, proxyPort);
 let assertQuery = makeAssertQuery(executeQuery);
 let createDatabase = makeCreateDatabase(dbName, tableName);
 let dropDatabase = makeDropDatabase(dbName);
+let throwError = function (res) { throw new Error(); };
+let expectError = function (errorName, errorMessageMatch, err) {
+  if (errorName !== null) errorName.should.equal(err.name);
+  if (errorMessageMatch !== null) err.msg.should.match(errorMessageMatch);
+  (err instanceof Error).should.equal(true);
+};
 
 describe('Read-only Queries', () => {
 
@@ -51,15 +57,10 @@ describe('Read-only Queries', () => {
 
   describe('Write Queries', function () {
 
+    let get = r.db(dbName).table(tableName);
     it('should throw an error after attempting to write to the database', (done) => {
-      let get = r.db(dbName).table(tableName);
       executeProxyQuery(get.insert({ hello: 'world' }))
-        .then(function (res) {
-          throw new Error();
-        })
-        .catch(function (err) {
-          (err instanceof Error).should.equal(true);
-        })
+        .then(throwError, expectError.bind(null, 'RqlClientError', /INSERT/i))
         .nodeify(done);
     });
 
@@ -72,14 +73,24 @@ describe('Read-only Queries', () => {
     });
 
     it('should not allow insert queries inside `do`', (done) => {
-      let get = r.db(dbName).table(tableName);
       executeProxyQuery(r.expr([1, 2, 3]).do(function (row) { return get.insert(row); }))
-        .then(function (res) {
-          throw new Error();
-        })
-        .catch(function (err) {
-          (err instanceof Error).should.equal(true);
-        })
+        .then(throwError, expectError.bind(null, 'RqlClientError', /INSERT/i))
+        .nodeify(done);
+    });
+
+    it('should not allow delete queries inside `forEach` inside a `do`', (done) => {
+      executeProxyQuery(get.coerceTo('array').do(function (rows) {
+        return rows.forEach(function (row) {
+            return get.get(row('id')).delete();
+        });
+      }))
+        .then(throwError, expectError.bind(null, 'RqlClientError', /DELETE/i))
+        .nodeify(done);
+    });
+
+    it('should allow for queries inside arrays', (done) => {
+      executeProxyQuery(r.expr([ get.delete(), get.coerceTo('array') ]))
+        .then(throwError, expectError.bind(null, 'RqlClientError', /DELETE/i))
         .nodeify(done);
     });
   });
