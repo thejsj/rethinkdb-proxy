@@ -1,7 +1,8 @@
 /*jshint esnext:true */
-const net = require('net');
-const BufferParser = require('./buffer-parser');
-const protoDef = require('../driver/proto-def');
+import net from 'net';
+import _ from 'lodash';
+import BufferParser from './buffer-parser';
+import protoDef from '../driver/proto-def';
 
 export default (opts, cb) => {
   let server = net.createServer((c) => { //'connection' listener
@@ -39,9 +40,56 @@ export default (opts, cb) => {
 
     parser.on('query', (query, token) => {
       if (opts.readOnly) {
-        let insert = new RegExp('\\[' + protoDef.Term.TermType.INSERT, 'i');
-        let jsonString = JSON.stringify(query);
-        if (jsonString.match(insert)) {
+        let invalidTerms = [
+          "INSERT",
+          "UPDATE",
+          "REPLACE",
+          "DELETE",
+          "DB_CREATE",
+          "DB_DROP",
+          "TABLE_CREATE",
+          "TABLE_DROP",
+          "INDEX_CREATE",
+          "INDEX_DROP",
+          "INDEX_RENAME",
+          "RECONFIGURE",
+          "REBALANCE",
+          "HTTP",
+          "JAVASCRIPT"
+        ];
+        let pl = (level) => { return ' '.repeat(level * 4); };
+        let isRQLQuery = (query) => {
+          // Duck typing a query...
+          if (!Array.isArray(query)) return false;
+          if (query.length < 2 || query.length > 3) return false;
+          if (!Number.isInteger(query[0])) return false;
+          if (
+            query[2] !== undefined &&
+            typeof query[2] !== 'object' &&
+            !Array.isArray(query[2])
+          ) {
+            return false;
+          }
+          return true;
+        };
+        let findTerms = (terms, query) => {
+          if (!isRQLQuery(query)) {
+            if (Array.isArray(query)) {
+              return _.flatten(query.map(findTerms.bind(null, terms))).filter(x => x);
+            }
+            return [];
+          }
+          let command = query[0], args = query[1], opts = query[2];
+          for (let termName of terms.values()) {
+            if(protoDef.Term.TermType[termName] === command) return termName;
+          }
+          if (command === protoDef.Term.TermType.MAKE_ARRAY) {
+            return _.flatten(query[1].map(findTerms.bind(null, terms))).filter(x => x);
+          }
+          return _.flatten(query.map(findTerms.bind(null, terms))).filter(x => x);
+        };
+        let termsFound = findTerms(invalidTerms, query);
+        if (termsFound.length > 0) {
           // This shouldn't throw an error, but rather, it should
           // send the error through the TCP connection
           let tokenBuffer = new Buffer(8);
@@ -51,7 +99,7 @@ export default (opts, cb) => {
             t: protoDef.Response.ResponseType.CLIENT_ERROR,
             b: [],
             n: [],
-            r: ["Cannot execute write queries"]
+            r: ['Cannot execute query. "' + termsFound + '" query not allowed.']
           };
           let responseBuffer = new Buffer(JSON.stringify(response));
           let lengthBuffer = new Buffer(4);

@@ -1,11 +1,26 @@
 # TODO
 
-[ ] Add token/connection parser
-[ ] Prevent `insert`, `update`, `replace`, `delete`
+[x] Add token/connection parser
+[x] Prevent `insert`, `update`, `replace`, `delete`
 [ ] Allow only a single database/table
+  [ ] database `--db test,hello`
+  [ ] tables `--table people, trains`, `--table test.people, hello.trains`
+[ ] Opt-in Options:
+  [ ] Allow Insert `--allow-insert` (`insert` allowed)
+  [ ] Allow Delete`--allow-delete` (`delete` allowed)
+  [ ] Allow Update`--allow-update` (`update` allowed)
+  [ ] Allow Database Create `--allow-db-create`
+  [ ] Database Drop `--allow-db-drop`
+  [ ] Table Creation `--allow-table-create`
+  [ ] Table Drop `--allow-table-drop`
+  [ ] HTTP `--allow-http`
+  [ ] JavaScript `--allow-javascript`
+  [ ] Reconfigure `--allow-reconfigure`
+  [ ] Rebalance `--allow-rebalance`
 
 ### Future
 
 [ ] Use from browser
-  [ ] Replace tcp library
+  [ ] Replace `net` library
 [ ] Convert queries back to strings. Re-build AST.
+[ ] Authentication
