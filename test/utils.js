@@ -22,7 +22,27 @@ export function makeExecuteQuery (dbName, proxyPort) {
             .finally(function () {
               return Promise.all([connA.close(), connB.close()]);
             });
+        });
+  };
+}
 
+export function makeExecuteProxyQuery (dbName, proxyPort) {
+  return function (query) {
+    return Promise.resolve()
+        .then(() => {
+          return r.connect({ port: proxyPort, db: dbName });
+        })
+        .then((conn) => {
+          return query.run(conn)
+            .then((result) => {
+              if (typeof result.toArray === 'function' && typeof result.each === 'function') {
+                return result.toArray();
+              }
+              return result;
+            })
+            .finally(function () {
+              return conn.close();
+            });
         });
   };
 }
@@ -55,11 +75,9 @@ export function makeCreateDatabase (dbName, tableName) {
 export function makeDropDatabase (dbName) {
   return function () {
     return r.connect().then((conn) => {
-      return Promise.resolve()
-        .then(() => {
-          return r.dbDrop(dbName).run(conn);
-        });
-  });
+      return r.dbDrop(dbName).run(conn)
+        .finally(() => conn.close());
+    });
   };
 }
 
