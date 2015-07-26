@@ -6,9 +6,9 @@
   [ ] database `--db test,hello`
   [ ] tables `--table people, trains`, `--table test.people, hello.trains`
 [ ] Opt-in Options:
-  [ ] Allow Insert `--allow-insert` (`insert` allowed)
-  [ ] Allow Delete`--allow-delete` (`delete` allowed)
-  [ ] Allow Update`--allow-update` (`update` allowed)
+  [ ] Allow Insert `--allow-insert`
+  [ ] Allow Delete`--allow-delete`
+  [ ] Allow Update`--allow-update`
   [ ] Allow Database Create `--allow-db-create`
   [ ] Database Drop `--allow-db-drop`
   [ ] Table Creation `--allow-table-create`
