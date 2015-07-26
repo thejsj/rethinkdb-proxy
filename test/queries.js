@@ -21,7 +21,8 @@ describe('Normal Queries', () => {
     createDatabase()
       .then(() => {
         server = startServer({
-          port: proxyPort
+          port: proxyPort,
+          allowWrites: true
         }, done);
       });
   });

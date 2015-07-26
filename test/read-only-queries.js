@@ -30,7 +30,6 @@ describe('Read-only Queries', () => {
       .then(() => {
         server = startServer({
           port: proxyPort,
-          readOnly: true
         }, done);
       });
   });
