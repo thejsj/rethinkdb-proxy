@@ -5,7 +5,7 @@ require("babel/register");
 var rethinkDBProxy = require('../server/');
 
 cli.parse({
-  'port':               [false, 'Port in which to run rethinkdb-proxy', 'number', null],
+  'port':               [false, 'Port in which to listen for driver connections', 'number', null],
   'allow-writes':       [false, 'Allow all operations that write to the database (`insert`, `update`, `delete`)'],
   'allow-insert':       [false, 'Allow `insert` queries'],
   'allow-update':       [false, 'Allow `update` queries'],
