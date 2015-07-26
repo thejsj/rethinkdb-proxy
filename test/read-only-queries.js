@@ -23,7 +23,8 @@ let expectError = function (errorName, errorMessageMatch, err) {
   (err instanceof Error).should.equal(true);
 };
 
-describe('Read-only Queries', () => {
+describe('Unallowed Queries', () => {
+  let get = r.db(dbName).table(tableName);
 
   before((done) => {
     createDatabase()
@@ -52,11 +53,15 @@ describe('Read-only Queries', () => {
        .nodeify(done);
     });
 
+    it('should allow for queries inside arrays', (done) => {
+      assertQuery(r.expr([ get.coerceTo('array'), get.coerceTo('array') ]))
+        .nodeify(done);
+    });
+
   });
 
-  describe('Write Queries', function () {
+  describe('Insert', function () {
 
-    let get = r.db(dbName).table(tableName);
     it('should throw an error after attempting to write to the database', (done) => {
       executeProxyQuery(get.insert({ hello: 'world' }))
         .then(throwError, expectError.bind(null, 'RqlClientError', /INSERT/i))
@@ -77,21 +82,47 @@ describe('Read-only Queries', () => {
         .nodeify(done);
     });
 
+
+    it('should not allow for write queries inside arrays', (done) => {
+      executeProxyQuery(r.expr([ get.delete(), get.coerceTo('array') ]))
+        .then(throwError, expectError.bind(null, 'RqlClientError', /DELETE/i))
+        .nodeify(done);
+    });
+  });
+
+  describe('Delete', () => {
     it('should not allow delete queries inside `forEach` inside a `do`', (done) => {
-      executeProxyQuery(get.coerceTo('array').do(function (rows) {
-        return rows.forEach(function (row) {
+      executeProxyQuery(get.coerceTo('array').do((rows) => {
+        return rows.forEach((row) => {
             return get.get(row('id')).delete();
         });
       }))
         .then(throwError, expectError.bind(null, 'RqlClientError', /DELETE/i))
         .nodeify(done);
     });
+  });
 
-    it('should allow for queries inside arrays', (done) => {
-      executeProxyQuery(r.expr([ get.delete(), get.coerceTo('array') ]))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /DELETE/i))
+  describe('HTTP', function () {
+    this.timeout(5000);
+
+    it('should not allow http queries inside `map` inside a `do`', (done) => {
+      executeProxyQuery(get.coerceTo('array').slice(0, 3).do((rows) => {
+        return rows.map((row) => {
+            return r.http('http://www.reddit.com/r/javascript.json');
+        });
+      }))
+        .then(throwError, expectError.bind(null, 'RqlClientError', /HTTP/i))
         .nodeify(done);
     });
+
+    it('should not allow http queries inside `do`', (done) => {
+      executeProxyQuery(r.expr('hello').do((rows) => {
+         return r.http('http://www.reddit.com/r/javascript.json');
+      }))
+        .then(throwError, expectError.bind(null, 'RqlClientError', /HTTP/i))
+        .nodeify(done);
+    });
+
   });
 
 });

@@ -5,6 +5,7 @@ import BufferParser from './buffer-parser';
 import protoDef from '../driver/proto-def';
 
 export default (opts, cb) => {
+
    // Define Options and defaults
   opts = Object.assign({
     port: 8125,
@@ -110,11 +111,7 @@ export default (opts, cb) => {
         if (!Array.isArray(query)) return false;
         if (query.length < 2 || query.length > 3) return false;
         if (!Number.isInteger(query[0])) return false;
-        if (
-          query[2] !== undefined &&
-          typeof query[2] !== 'object' &&
-          !Array.isArray(query[2])
-        ) {
+        if (query[2] !== undefined && typeof query[2] !== 'object' && !Array.isArray(query[2])) {
           return false;
         }
         return true;
@@ -136,6 +133,9 @@ export default (opts, cb) => {
         return _.flatten(query.map(findTerms.bind(null, terms))).filter(x => x);
     };
 
+    /*!
+     * Listeners
+     */
     serverSocket.on('data', (buff) => {
       if (buff.toString() === 'SUCCESS') clientSocket.connected = true;
       // NOTE: The socket might try to write something even if the connection
