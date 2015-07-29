@@ -26,7 +26,8 @@ let expectError = function (errorName, errorMessageMatch, err) {
 describe('Unallowed Queries', () => {
   let get = r.db(dbName).table(tableName);
 
-  before((done) => {
+  before(function (done) {
+    this.timeout(5000);
     createDatabase()
       .then(() => {
         server = startServer({
@@ -103,7 +104,6 @@ describe('Unallowed Queries', () => {
   });
 
   describe('HTTP', function () {
-    this.timeout(5000);
 
     it('should not allow http queries inside `map` inside a `do`', (done) => {
       executeProxyQuery(get.coerceTo('array').slice(0, 3).do((rows) => {
