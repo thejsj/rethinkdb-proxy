@@ -107,30 +107,72 @@ export default (opts, cb) => {
     let sendResponseToServer = makeSendResponse(serverSocket);
     let sendResponseToClient = makeSendResponse(clientSocket);
     let isRQLQuery = (query) => {
-        // Duck typing a query...
-        if (!Array.isArray(query)) return false;
-        if (query.length < 2 || query.length > 3) return false;
-        if (!Number.isInteger(query[0])) return false;
-        if (query[2] !== undefined && typeof query[2] !== 'object' && !Array.isArray(query[2])) {
-          return false;
+      // Duck typing a query...
+      if (!Array.isArray(query)) return false;
+      if (query.length < 2 || query.length > 3) return false;
+      if (!Number.isInteger(query[0])) return false;
+      if (query[2] !== undefined && typeof query[2] !== 'object' && !Array.isArray(query[2])) {
+        return false;
+      }
+      return true;
+    };
+    let findTerms = (terms, query) => {
+      if (!isRQLQuery(query)) {
+        if (Array.isArray(query)) {
+          return _.flatten(query.map(findTerms.bind(null, terms))).filter(x => x);
         }
-        return true;
-      };
-      let findTerms = (terms, query) => {
-        if (!isRQLQuery(query)) {
-          if (Array.isArray(query)) {
-            return _.flatten(query.map(findTerms.bind(null, terms))).filter(x => x);
-          }
-          return [];
+        return [];
+      }
+      let command = query[0], args = query[1], opts = query[2];
+      /*!
+       * Edge cases
+       */
+      // #1 If `replace` is allowed but `delete` is not
+      if (
+        command === protoDef.Term.TermType.REPLACE &&
+        !terms.includes("REPLACE") &&
+        terms.includes("DELETE")
+      ){
+        let argPassedToReplace = args[args.length - 1];
+        if (argPassedToReplace === null) {
+          return { 'error': 'Using the `REPLACE` term with `null` is not allowed if `DELETE` is not also allowed.' };
         }
-        let command = query[0], args = query[1], opts = query[2];
-        for (let termName of terms.values()) {
-          if(protoDef.Term.TermType[termName] === command) return termName;
+      }
+      // #2 If `insert` is allowed but `update` is not
+      if (
+        command === protoDef.Term.TermType.INSERT &&
+        !terms.includes("INSERT") &&
+        terms.includes("UPDATE")
+      ){
+        if (
+          typeof opts === 'object' &&
+          typeof opts.conflict === 'string' &&
+          opts.conflict.toLowerCase() === 'update'
+        ) {
+          return { 'error': 'Using the `INSERT` term with `conflict: update` is not allowed if `UPDATE` is not also allowed.' };
         }
-        if (command === protoDef.Term.TermType.MAKE_ARRAY) {
-          return _.flatten(query[1].map(findTerms.bind(null, terms))).filter(x => x);
+      }
+      // #3 If `insert` is allowed but `delete` is not
+      if (
+        command === protoDef.Term.TermType.INSERT &&
+        !terms.includes("INSERT") &&
+        terms.includes("REPLACE")
+      ){
+        if (
+          typeof opts === 'object' &&
+          typeof opts.conflict === 'string' &&
+          opts.conflict.toLowerCase() === 'replace'
+        ) {
+          return { 'error': 'Using the `INSERT` term with `conflict: replace` is not allowed if `REPLACE` is not also allowed.' };
         }
-        return _.flatten(query.map(findTerms.bind(null, terms))).filter(x => x);
+      }
+      for (let termName of terms.values()) {
+        if(protoDef.Term.TermType[termName] === command) return termName;
+      }
+      if (command === protoDef.Term.TermType.MAKE_ARRAY) {
+        return _.flatten(query[1].map(findTerms.bind(null, terms))).filter(x => x);
+      }
+      return _.flatten(query.map(findTerms.bind(null, terms))).filter(x => x);
     };
 
     /*!
@@ -161,11 +203,17 @@ export default (opts, cb) => {
       if (termsFound.length > 0) {
         // This shouldn't throw an error, but rather, it should
         // send the error through the TCP connection
+        let errorMessage;
+        if (typeof termsFound[0] === 'object' && typeof termsFound[0].error === 'string') {
+          errorMessage = termsFound[0].error;
+        } else {
+          errorMessage = 'Cannot execute query. "' + termsFound + '" query not allowed.';
+        }
         let response = {
           t: protoDef.Response.ResponseType.CLIENT_ERROR,
           b: [],
           n: [],
-          r: ['Cannot execute query. "' + termsFound + '" query not allowed.']
+          r: [errorMessage]
         };
         sendResponseToClient(response, token);
       }
