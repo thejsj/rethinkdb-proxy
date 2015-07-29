@@ -17,7 +17,8 @@ let dropDatabase = makeDropDatabase(dbName);
 
 describe('Normal Queries', () => {
 
-  before((done) => {
+  before(function (done) {
+    this.timeout(5000);
     createDatabase()
       .then(() => {
         server = startServer({
