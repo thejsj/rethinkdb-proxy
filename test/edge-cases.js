@@ -108,13 +108,13 @@ describe('Edge Cases', () => {
     });
 
    it('should not allow a query that passes `conflict: replace` if `replace` is not allowed', (done) => {
-      executeQuery(get.insert({ id: 1, name: 'Hugo'}, { conflict: 'replace' }))
+      executeProxyQuery(get.insert({ id: 1, name: 'Hugo'}, { conflict: 'replace' }))
         .then(throwError, expectError.bind(null, 'RqlClientError', /INSERT/i))
         .nodeify(done);
     });
 
    it('should not allow a query that passes `conflict: update` if `update` is not allowed', (done) => {
-      executeQuery(get.insert({ id: 1, name: 'Hugo'}, { conflict: 'update' }))
+      executeProxyQuery(get.insert({ id: 1, name: 'Hugo'}, { conflict: 'update' }))
         .then(throwError, expectError.bind(null, 'RqlClientError', /UPDATE/i))
         .nodeify(done);
     });

@@ -1,5 +1,4 @@
 /*jshint esnext:true */
-
 const _listeners_ = Symbol('listeners');
 const _queue_ = Symbol('queue');
 
