@@ -2,13 +2,17 @@
 import net from 'net';
 import _ from 'lodash';
 import BufferParser from './buffer-parser';
-import protoDef from '../driver/proto-def';
+import protoDef from 'rethinkdb/proto-def';
 
 export default (opts, cb) => {
 
    // Define Options and defaults
   opts = Object.assign({
     port: 8125,
+    rdbHost: 'localhost',
+    rdbPort: 28015,
+    db: [],
+    allowSysDbAccess: false,
     allowWrites: false, // Allow insert, update, delete
     allowInsert: false,
     allowUpdate: false,
@@ -27,6 +31,12 @@ export default (opts, cb) => {
     allowHttp: false,
     allowJavascript: false
   }, opts);
+
+  // Clean options
+
+  if (typeof opts.db === 'string') {
+    opts.db = [opts.db];
+  }
 
   // By default, don't allow any of these terms
   let unallowedTerms = [
@@ -85,7 +95,7 @@ export default (opts, cb) => {
 
     clientSocket.connected = false;
     let parser = new BufferParser();
-    let serverSocket = net.connect(28015, 'localhost');
+    let serverSocket = net.connect(opts.rdbPort, opts.rdbHost);
 
     /*!
      * Functions
@@ -123,7 +133,7 @@ export default (opts, cb) => {
         }
         return [];
       }
-      let command = query[0], args = query[1], opts = query[2];
+      let command = query[0], args = query[1], query_opts = query[2];
       /*!
        * Edge cases
        */
@@ -145,9 +155,9 @@ export default (opts, cb) => {
         terms.includes("UPDATE")
       ){
         if (
-          typeof opts === 'object' &&
-          typeof opts.conflict === 'string' &&
-          opts.conflict.toLowerCase() === 'update'
+          typeof query_opts === 'object' &&
+          typeof query_opts.conflict === 'string' &&
+          query_opts.conflict.toLowerCase() === 'update'
         ) {
           return { 'error': 'Using the `INSERT` term with `conflict: update` is not allowed if `UPDATE` is not also allowed.' };
         }
@@ -159,11 +169,24 @@ export default (opts, cb) => {
         terms.includes("REPLACE")
       ){
         if (
-          typeof opts === 'object' &&
-          typeof opts.conflict === 'string' &&
-          opts.conflict.toLowerCase() === 'replace'
+          typeof query_opts === 'object' &&
+          typeof query_opts.conflict === 'string' &&
+          query_opts.conflict.toLowerCase() === 'replace'
         ) {
           return { 'error': 'Using the `INSERT` term with `conflict: replace` is not allowed if `REPLACE` is not also allowed.' };
+        }
+      }
+      /*!
+       * Database and table access
+       */
+      if (command === protoDef.Term.TermType.DB && typeof opts === 'object') {
+        let dbName = args[args.length - 1];
+        if (!opts.allowSysDbAccess && dbName === "rethinkdb") {
+          return { 'error': 'Access to the `rethinkdb` database is not allowed unless explicitly stated with `allowSysDbAccess`' };
+        }
+        if (Array.isArray(opts.db) && opts.db.length > 0 && !opts.db.includes(dbName)) {
+          return { 'error': `Access to the \`{$dbName}\` database is not allowed.
+            Database must be inlcluded in \`db\` parameter` };
         }
       }
       for (let termName of terms.values()) {
@@ -200,6 +223,9 @@ export default (opts, cb) => {
 
     parser.on('query', (query, token) => {
       let termsFound = findTerms(unallowedTerms, query);
+      if (typeof query[2] === 'object' && query[2].db !== undefined) {
+        termsFound = termsFound.concat(findTerms(unallowedTerms, query[2].db));
+      }
       if (termsFound.length > 0) {
         // This shouldn't throw an error, but rather, it should
         // send the error through the TCP connection
