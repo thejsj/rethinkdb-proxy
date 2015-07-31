@@ -136,7 +136,7 @@ describe('Database and Table Access', () => {
           return new Promise(function (resolve, reject) {
             server = startServer({
               port: proxyPort,
-              db: dbName
+              db: [dbName, 'someOtherDb']
             }, resolve);
           });
         })
@@ -194,10 +194,52 @@ describe('Database and Table Access', () => {
 
   describe('Table Access', () => {
 
-    xit('should', () => {
-
+    before(function (done) {
+      this.timeout(5000);
+      createDatabase()
+        .then(createSecondDatabase)
+        .then(() => {
+          return new Promise(function (resolve, reject) {
+            server = startServer({
+              port: proxyPort,
+              db: [dbName, 'someOtherDb'],
+              table: tableName
+            }, resolve);
+          });
+        })
+        .nodeify(done);
     });
 
+    after((done) => {
+      dropDatabase()
+      .then(server.close)
+      .then(done.bind(null, null));
+    });
+
+    it('should not allow access to a table if not allowed', (done) => {
+      executeProxyQuery(r.db(dbName).table('someOtherTable'))
+        .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+        .nodeify(done);
+    });
+
+    it('should allow access to a table if allowed', (done) => {
+      executeProxyQuery(r.db(dbName).table(tableName))
+        .then(function (list) {
+          list.should.be.instanceof(Array);
+        })
+        .nodeify(done);
+    });
+
+    describe('Connection', () => {
+      it('should throw an error when trying to connect with an unallowed database', (done) => {
+        r.connect({ port: proxyPort, db: dbName })
+          .then(function (conn) {
+            return r.table(tableName).run(conn);
+          })
+         .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+         .nodeify(done);
+      });
+    });
   });
 
 });

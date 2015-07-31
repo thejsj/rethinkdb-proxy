@@ -1,95 +1,16 @@
 /*jshint esnext:true */
 import net from 'net';
-import _ from 'lodash';
-import BufferParser from './buffer-parser';
 import protoDef from 'rethinkdb/proto-def';
+import BufferParser from './buffer-parser';
+import { findTerms } from './query-parser';
+import optionsParser from './options-parser';
 
 export default (opts, cb) => {
 
-   // Define Options and defaults
-  opts = Object.assign({
-    port: 8125,
-    rdbHost: 'localhost',
-    rdbPort: 28015,
-    db: [],
-    allowSysDbAccess: false,
-    allowWrites: false, // Allow insert, update, delete
-    allowInsert: false,
-    allowUpdate: false,
-    allowReplace: false,
-    allowDelete: false,
-    allowDbCreate: false,
-    allowDbDrop: false,
-    allowTableCreate: false,
-    allowTableDrop: false,
-    allowIndexes: false, // Allow indexCreate, indexDrop, indexRename
-    allowIndexCreate: false,
-    allowIndexDrop: false,
-    allowIndexRename: false,
-    allowReconfigure: false,
-    allowRebalance: false,
-    allowHttp: false,
-    allowJavascript: false
-  }, opts);
+  // Set defaults and unallowedTerms
+  opts = optionsParser(opts);
 
-  // Clean options
-
-  if (typeof opts.db === 'string') {
-    opts.db = [opts.db];
-  }
-
-  // By default, don't allow any of these terms
-  let unallowedTerms = [
-    "INSERT",
-    "UPDATE",
-    "REPLACE",
-    "DELETE",
-    "DB_CREATE",
-    "DB_DROP",
-    "TABLE_CREATE",
-    "TABLE_DROP",
-    "INDEX_CREATE",
-    "INDEX_DROP",
-    "INDEX_RENAME",
-    "RECONFIGURE",
-    "REBALANCE",
-    "HTTP",
-    "JAVASCRIPT"
-  ];
-
-  let toUpperCaseSnakeCase = (str) => {
-    return str
-      .replace(/(^[A-Z])/g, ($1) => { return $1.toLowerCase(); })
-      .replace(/([A-Z])/g, ($1) => { return "_"+$1.toUpperCase(); })
-      .toUpperCase();
-  };
-  let allowTerm = (termName) => {
-    if (unallowedTerms.includes(termName)) {
-      unallowedTerms.splice(unallowedTerms.indexOf(termName), 1);
-    }
-  };
-  // Allow all terms specified by user (single terms)
-  for(let key in opts) {
-    if (opts.hasOwnProperty(key)) {
-      if (opts[key] === true && key.substring(0, 5) === 'allow') {
-        let termName = toUpperCaseSnakeCase(key.substring(5));
-        allowTerm(termName);
-      }
-    }
-  }
-  // Allow all terms specified (multiple terms)
-  if (opts.allowWrites) {
-    allowTerm('INSERT');
-    allowTerm('UPDATE');
-    allowTerm('DELETE');
-  }
-  if (opts.allowIndexes) {
-    allowTerm('INDEX_CREATE');
-    allowTerm('INDEX_DROP');
-    allowTerm('INDEX_RENAME');
-  }
-
-  let server = net.createServer((clientSocket) => { //'connection' listener
+   let server = net.createServer((clientSocket) => { //'connection' listener
     if (server.__connections === undefined) server.__connections = [];
     server.__connections.push(clientSocket);
 
@@ -116,88 +37,6 @@ export default (opts, cb) => {
     };
     let sendResponseToServer = makeSendResponse(serverSocket);
     let sendResponseToClient = makeSendResponse(clientSocket);
-    let isRQLQuery = (query) => {
-      // Duck typing a query...
-      if (!Array.isArray(query)) return false;
-      if (query.length < 2 || query.length > 3) return false;
-      if (!Number.isInteger(query[0])) return false;
-      if (query[2] !== undefined && typeof query[2] !== 'object' && !Array.isArray(query[2])) {
-        return false;
-      }
-      return true;
-    };
-    let findTerms = (terms, query) => {
-      if (!isRQLQuery(query)) {
-        if (Array.isArray(query)) {
-          return _.flatten(query.map(findTerms.bind(null, terms))).filter(x => x);
-        }
-        return [];
-      }
-      let command = query[0], args = query[1], query_opts = query[2];
-      /*!
-       * Edge cases
-       */
-      // #1 If `replace` is allowed but `delete` is not
-      if (
-        command === protoDef.Term.TermType.REPLACE &&
-        !terms.includes("REPLACE") &&
-        terms.includes("DELETE")
-      ){
-        let argPassedToReplace = args[args.length - 1];
-        if (argPassedToReplace === null) {
-          return { 'error': 'Using the `REPLACE` term with `null` is not allowed if `DELETE` is not also allowed.' };
-        }
-      }
-      // #2 If `insert` is allowed but `update` is not
-      if (
-        command === protoDef.Term.TermType.INSERT &&
-        !terms.includes("INSERT") &&
-        terms.includes("UPDATE")
-      ){
-        if (
-          typeof query_opts === 'object' &&
-          typeof query_opts.conflict === 'string' &&
-          query_opts.conflict.toLowerCase() === 'update'
-        ) {
-          return { 'error': 'Using the `INSERT` term with `conflict: update` is not allowed if `UPDATE` is not also allowed.' };
-        }
-      }
-      // #3 If `insert` is allowed but `delete` is not
-      if (
-        command === protoDef.Term.TermType.INSERT &&
-        !terms.includes("INSERT") &&
-        terms.includes("REPLACE")
-      ){
-        if (
-          typeof query_opts === 'object' &&
-          typeof query_opts.conflict === 'string' &&
-          query_opts.conflict.toLowerCase() === 'replace'
-        ) {
-          return { 'error': 'Using the `INSERT` term with `conflict: replace` is not allowed if `REPLACE` is not also allowed.' };
-        }
-      }
-      /*!
-       * Database and table access
-       */
-      if (command === protoDef.Term.TermType.DB && typeof opts === 'object') {
-        let dbName = args[args.length - 1];
-        if (!opts.allowSysDbAccess && dbName === "rethinkdb") {
-          return { 'error': 'Access to the `rethinkdb` database is not allowed unless explicitly stated with `allowSysDbAccess`' };
-        }
-        if (Array.isArray(opts.db) && opts.db.length > 0 && !opts.db.includes(dbName)) {
-          return { 'error': `Access to the \`{$dbName}\` database is not allowed.
-            Database must be inlcluded in \`db\` parameter` };
-        }
-      }
-      for (let termName of terms.values()) {
-        if(protoDef.Term.TermType[termName] === command) return termName;
-      }
-      if (command === protoDef.Term.TermType.MAKE_ARRAY) {
-        return _.flatten(query[1].map(findTerms.bind(null, terms))).filter(x => x);
-      }
-      return _.flatten(query.map(findTerms.bind(null, terms))).filter(x => x);
-    };
-
     /*!
      * Listeners
      */
@@ -222,18 +61,19 @@ export default (opts, cb) => {
     });
 
     parser.on('query', (query, token) => {
-      let termsFound = findTerms(unallowedTerms, query);
+      let termsFound = findTerms(opts, opts.unallowedTerms, query);
+      // NOTE: This should be in the `findTerms` function. Not Here...
       if (typeof query[2] === 'object' && query[2].db !== undefined) {
-        termsFound = termsFound.concat(findTerms(unallowedTerms, query[2].db));
+        termsFound = termsFound.concat(findTerms(opts, opts.unallowedTerms, query[2].db));
       }
       if (termsFound.length > 0) {
-        // This shouldn't throw an error, but rather, it should
+        // This shouldn't throw an error. It should
         // send the error through the TCP connection
         let errorMessage;
         if (typeof termsFound[0] === 'object' && typeof termsFound[0].error === 'string') {
           errorMessage = termsFound[0].error;
         } else {
-          errorMessage = 'Cannot execute query. "' + termsFound + '" query not allowed.';
+          errorMessage = 'Cannot execute query. \"' + termsFound + '\" query not allowed.';
         }
         let response = {
           t: protoDef.Response.ResponseType.CLIENT_ERROR,
@@ -245,7 +85,6 @@ export default (opts, cb) => {
       }
       sendResponseToServer(query, token);
     });
-
     clientSocket.on('data', parser.append.bind(parser));
   });
 
