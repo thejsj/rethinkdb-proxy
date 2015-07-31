@@ -78,7 +78,7 @@ describe('Unallowed Queries', () => {
     });
 
     it('should not allow insert queries inside `do`', (done) => {
-      executeProxyQuery(r.expr([1, 2, 3]).do(function (row) { return get.insert(row); }))
+      executeProxyQuery(r.expr([1, 2, 3]).do(function (row) { return get.insert({ name: row }); }))
         .then(throwError, expectError.bind(null, 'RqlClientError', /INSERT/i))
         .nodeify(done);
     });

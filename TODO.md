@@ -12,6 +12,9 @@
   [ ] Break up codes into more modular structure
 [ ] API
   [ ] Better name for allowSysDbAccess
+[ ] Test changefeeds
+[ ] Test cursors
+[ ] Ask: When a database is passed to a connection, is that passed along to the server? It seems it stays in the driver.
 
 ## Future
 

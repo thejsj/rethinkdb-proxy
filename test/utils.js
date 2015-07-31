@@ -1,6 +1,7 @@
 /*jshint esnext:true */
 import Promise from 'bluebird';
 import r from 'rethinkdb';
+import Server from 'reqlite';
 
 export function makeExecuteQuery (dbName, proxyPort) {
   return function (query) {
