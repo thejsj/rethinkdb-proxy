@@ -87,9 +87,9 @@ let checkForDatabaseAccess =  function (opts, connectionDbName, command, args, q
         'error': 'Access to the `rethinkdb` database is not allowed unless explicitly stated with `allowSysDbAccess`'
       }];
     }
-    if (Array.isArray(opts.db) && opts.db.length > 0 && !opts.db.includes(dbName)) {
-      return [{ 'error': `Access to the \`{$dbName}\` database is not allowed.
-        Database must be inlcluded in \`db\` parameter` }];
+    if (opts.dbs.$$count > 0 && (typeof opts.dbs[dbName] !== 'object' || !opts.dbs[dbName].allowed)) {
+      return [{ 'error': `Access to the \`${dbName}\` database is not allowed. ` +
+        `Database must be inlcluded in \`db\` parameter` }];
     }
   }
   return [];
