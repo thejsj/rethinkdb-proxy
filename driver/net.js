@@ -39,6 +39,8 @@
   mkAtom = util.mkAtom;
 
   mkErr = util.mkErr;
+  /* GLOABAL REFERENCES TO CONNECTIONS */
+  global.connections = {};
 
   Connection = (function(superClass) {
     extend(Connection, superClass);
@@ -489,7 +491,15 @@
         };
       })(this));
       this.rawSocket.once('connect', (function(_this) {
+
         return function() {
+          var port = _this.rawSocket.localPort;
+          console.log('connect');
+          console.log(port);
+          if (connections[port] === undefined) {
+            connections[port] = _this.rawSocket;
+          }
+          console.log('^^ connect');
           var auth_buffer, auth_length, handshake_callback, protocol, version;
           version = new Buffer(4);
           version.writeUInt32LE(protoVersion, 0);
@@ -499,7 +509,6 @@
           protocol = new Buffer(4);
           protocol.writeUInt32LE(protoProtocol, 0);
           var token = Buffer.concat([version, auth_length, auth_buffer, protocol]);
-          console.log(token.readUInt32LE());
           _this.rawSocket.write(token);
           handshake_callback = function(buf) {
             var b, i, j, len, ref, status_buf, status_str;
@@ -536,6 +545,13 @@
       })(this));
       this.rawSocket.on('close', (function(_this) {
         return function() {
+          console.log('Close connection');
+          console.log(port);
+          if (connections[port] !== undefined) {
+            delete connections[port];
+          }
+          console.log('^^ Close connection');
+          v
           if (_this.isOpen()) {
             _this.close({
               noreplyWait: false
@@ -603,7 +619,6 @@
     };
 
     TcpConnection.prototype._writeQuery = function(token, data) {
-      console.log('Token', token);
       var tokenBuf;
       tokenBuf = new Buffer(8);
       tokenBuf.writeUInt32LE(token & 0xFFFFFFFF, 0);
