@@ -12,21 +12,34 @@ export default class RethinkDBProxy {
     this.opts = optionsParser(opts);
     this.__connections = [];
     this.server = net.createServer(this.connectionHandler.bind(this));
+    return this;
   }
 
   listen (cb) {
-    this.server.listen(this.opts.port, cb);
+    return new Promise((resolve, reject) => {
+      this.server.listen(this.opts.port, function (err) {
+        if (err) {
+          if (typeof cb === 'function') cb(err);
+          reject(err);
+        }
+        if (typeof cb === 'function') cb();
+        resolve();
+      });
+    });
   }
 
-  close () {
-    return new Promise(function (resolve, reject) {
-      this.server.close(resolve);
+  close (cb) {
+    return new Promise((resolve, reject) => {
+      this.server.close(function () {
+        if (typeof cb === 'function') cb();
+        resolve();
+      });
       setTimeout(() => {
         this.__connections.forEach(function (conn) {
           conn.destroy();
         });
       }, 100);
-    }.bind(this));
+    });
   }
 
   makeSendResponse (socket) {

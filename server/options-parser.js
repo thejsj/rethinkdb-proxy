@@ -4,7 +4,8 @@ export default (opts) => {
     port: 8125,
     rdbHost: 'localhost',
     rdbPort: 28015,
-    db: [],
+    dbs: [],
+    tables: [],
     allowSysDbAccess: false,
     allowWrites: false, // Allow insert, update, delete
     allowInsert: false,
@@ -26,9 +27,19 @@ export default (opts) => {
   }, opts);
 
   // Clean options
-  if (typeof opts.db === 'string') {
-    opts.db = [opts.db];
+  if (typeof opts.dbs === 'string') {
+    opts.dbs = [opts.dbs];
   }
+  // Create object for dbs
+  let databases = opts.dbs;
+  opts.dbs = {
+    $$count: 0 // `$` not allowed in RethinkDB database names
+  };
+  databases.forEach(function (database) {
+    opts.dbs[database] = { allowed: true };
+    // `$` not allowed in RethinkDB database names
+    opts.dbs.$$count += 1;
+  });
 
   // By default, don't allow any of these terms
   opts.unallowedTerms = [
