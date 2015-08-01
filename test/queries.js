@@ -1,7 +1,7 @@
 /*jshint esnext:true */
 import r from 'rethinkdb';
 import Promise from 'bluebird';
-import startServer from '../server';
+import RethinkDBProxy from '../server';
 import should from 'should';
 import { makeExecuteQuery, makeAssertQuery, makeCreateDatabase, makeDropDatabase } from './utils';
 
@@ -21,10 +21,11 @@ describe('Normal Queries', () => {
     this.timeout(5000);
     createDatabase()
       .then(() => {
-        server = startServer({
+        server = new RethinkDBProxy({
           port: proxyPort,
           allowWrites: true
-        }, done);
+        });
+        server.listen(done);
       });
   });
 

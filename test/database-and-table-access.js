@@ -1,7 +1,7 @@
 /*jshint esnext:true */
 import r from 'rethinkdb';
 import Promise from 'bluebird';
-import startServer from '../server';
+import RethinkDBProxy from '../server';
 import should from 'should';
 import { makeExecuteQuery, makeExecuteProxyQuery, makeAssertQuery, makeCreateDatabase, makeDropDatabase } from './utils';
 import protoDef from '../driver/proto-def';
@@ -38,9 +38,10 @@ describe('Database and Table Access', () => {
         createDatabase()
           .then(() => {
             return new Promise(function (resolve, reject) {
-              server = startServer({
+              server = new RethinkDBProxy({
                 port: proxyPort,
-              }, resolve);
+              });
+              server.listen(resolve);
             });
           })
           .nodeify(done);
@@ -48,7 +49,7 @@ describe('Database and Table Access', () => {
 
       after((done) => {
         dropDatabase()
-        .then(server.close)
+        .then(server.close.bind(server))
         .then(done.bind(null, null));
       });
 
@@ -91,10 +92,11 @@ describe('Database and Table Access', () => {
         createDatabase()
           .then(() => {
             return new Promise(function (resolve, reject) {
-              server = startServer({
+              server = new RethinkDBProxy({
                 port: proxyPort,
                 allowSysDbAccess: true
-              }, resolve);
+              });
+              server.listen(resolve);
             });
           })
           .nodeify(done);
@@ -102,7 +104,7 @@ describe('Database and Table Access', () => {
 
       after((done) => {
         dropDatabase()
-        .then(server.close)
+        .then(server.close.bind(server))
         .then(done.bind(null, null));
       });
 
@@ -134,10 +136,11 @@ describe('Database and Table Access', () => {
         .then(createSecondDatabase)
         .then(() => {
           return new Promise(function (resolve, reject) {
-            server = startServer({
+            server = new RethinkDBProxy({
               port: proxyPort,
               db: [dbName, 'someOtherDb']
-            }, resolve);
+            });
+            server.listen(resolve);
           });
         })
         .nodeify(done);
@@ -145,7 +148,7 @@ describe('Database and Table Access', () => {
 
     after((done) => {
       dropDatabase()
-      .then(server.close)
+      .then(server.close.bind(server))
       .then(done.bind(null, null));
     });
 
@@ -200,11 +203,12 @@ describe('Database and Table Access', () => {
         .then(createSecondDatabase)
         .then(() => {
           return new Promise(function (resolve, reject) {
-            server = startServer({
+            server = new RethinkDBProxy({
               port: proxyPort,
               db: [dbName, 'someOtherDb'],
               table: tableName
-            }, resolve);
+            });
+            server.listen(resolve);
           });
         })
         .nodeify(done);
@@ -212,7 +216,7 @@ describe('Database and Table Access', () => {
 
     after((done) => {
       dropDatabase()
-      .then(server.close)
+      .then(server.close.bind(server))
       .then(done.bind(null, null));
     });
 

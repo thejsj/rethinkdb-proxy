@@ -1,7 +1,7 @@
 /*jshint esnext:true */
 import r from 'rethinkdb';
 import Promise from 'bluebird';
-import startServer from '../server';
+import RethinkDBProxy from '../server';
 import should from 'should';
 
 let proxyPort = 8125;
@@ -10,9 +10,10 @@ let server;
 describe('Connection', () => {
 
   before((done) => {
-    server = startServer({
+    server = new RethinkDBProxy({
       port: proxyPort
-    }, done);
+    });
+    server.listen(done);
   });
 
   after((done) => {

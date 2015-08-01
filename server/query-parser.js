@@ -20,10 +20,12 @@ let checkForDeleteInReplace = function (terms, command, args, query_opts) {
   ){
     let argPassedToReplace = args[args.length - 1];
     if (argPassedToReplace === null) {
-      return { 'error': 'Using the `REPLACE` term with `null` is not allowed if `DELETE` is not also allowed.' };
+      return [{
+        'error': 'Using the `REPLACE` term with `null` is not allowed if `DELETE` is not also allowed.'
+      }];
     }
   }
-  return null;
+  return [];
 };
 
 let checkForUpdateInInsert = function (terms, command, args, query_opts) {
@@ -37,12 +39,12 @@ let checkForUpdateInInsert = function (terms, command, args, query_opts) {
       typeof query_opts.conflict === 'string' &&
       query_opts.conflict.toLowerCase() === 'update'
     ) {
-      return {
+      return [{
         'error': 'Using the `INSERT` term with `conflict: update` is not allowed if `UPDATE` is not also allowed.'
-      };
+      }];
     }
   }
-  return null;
+  return [];
 };
 
 let checkForDeleteInInsert = function (terms, command, args, query_opts) {
@@ -56,15 +58,15 @@ let checkForDeleteInInsert = function (terms, command, args, query_opts) {
       typeof query_opts.conflict === 'string' &&
       query_opts.conflict.toLowerCase() === 'replace'
     ) {
-      return {
+      return [{
         'error': 'Using the `INSERT` term with `conflict: replace` is not allowed if `REPLACE` is not also allowed.'
-      };
+      }];
     }
   }
-  return null;
+  return [];
 };
 
-let checkForTableAccess =  function (opts, command, args, query_opts) {
+let checkForTableAccess =  function (opts, connectionDbName, command, args, query_opts) {
   if (command === protoDef.Term.TermType.TABLE && typeof opts === 'object') {
     let tableName = args[args.length - 1];
     //console.log('tableName', tableName);
@@ -74,26 +76,27 @@ let checkForTableAccess =  function (opts, command, args, query_opts) {
         //Database must be inlcluded in \`db\` parameter` };
     //}
   }
-  return null;
+  return [];
 };
 
-let checkForDatabaseAccess =  function (opts, command, args, query_opts) {
+let checkForDatabaseAccess =  function (opts, connectionDbName, command, args, query_opts) {
   if (command === protoDef.Term.TermType.DB && typeof opts === 'object') {
     let dbName = args[args.length - 1];
     if (!opts.allowSysDbAccess && dbName === 'rethinkdb') {
-      return {
+      return [{
         'error': 'Access to the `rethinkdb` database is not allowed unless explicitly stated with `allowSysDbAccess`'
-      };
+      }];
     }
     if (Array.isArray(opts.db) && opts.db.length > 0 && !opts.db.includes(dbName)) {
-      return { 'error': `Access to the \`{$dbName}\` database is not allowed.
-        Database must be inlcluded in \`db\` parameter` };
+      return [{ 'error': `Access to the \`{$dbName}\` database is not allowed.
+        Database must be inlcluded in \`db\` parameter` }];
     }
   }
-  return null;
+  return [];
 };
 
 export const findTerms = (opts, terms, query) => {
+  let termsFound = [], connectionDbName;
 
   const __findTerms = (query) => {
     if (!isRQLQuery(query)) {
@@ -107,26 +110,27 @@ export const findTerms = (opts, terms, query) => {
     /*!
      * Edge cases
      */
-    let found = null;
-    // #1 If `replace` is allowed but `delete` is not
-    found = found || checkForDeleteInReplace(terms, command, args, query_opts);
-    // #2 If `insert` is allowed but `update` is not
-    found = found || checkForUpdateInInsert(terms, command, args, query_opts);
-    // #3 If `insert` is allowed but `delete` is not
-    found = found || checkForDeleteInInsert(terms, command, args, query_opts);
-    if (found !== null) return found;
+    let errorsFound = []
+      // #1 If `replace` is allowed but `delete` is not
+      .concat(checkForDeleteInReplace(terms, command, args, query_opts))
+      // #2 If `insert` is allowed but `update` is not
+      .concat(checkForUpdateInInsert(terms, command, args, query_opts))
+      // #3 If `insert` is allowed but `delete` is not
+      .concat(checkForDeleteInInsert(terms, command, args, query_opts));
+    if (errorsFound.length > 0) return errorsFound;
 
      /*!
-     * Database and table access
-     */
-    found = found || checkForDatabaseAccess(opts, command, args, query_opts);
-    found = found || checkForTableAccess(opts, command, args, query_opts);
-    if (found !== null) return found;
+      * Database and table access
+      */
+    errorsFound = []
+      .concat(checkForDatabaseAccess(opts, connectionDbName, command, args, query_opts))
+      .concat(checkForTableAccess(opts, connectionDbName, command, args, query_opts));
+    if (errorsFound.length > 0) return errorsFound;
 
     /*!
      * Check for unallowedTerms
      */
-   for (let termName of terms.values()) {
+    for (let termName of terms.values()) {
       if(protoDef.Term.TermType[termName] === command) return termName;
     }
     if (command === protoDef.Term.TermType.MAKE_ARRAY) {
@@ -134,7 +138,12 @@ export const findTerms = (opts, terms, query) => {
     }
     return _.flatten(query.map(__findTerms)).filter(x => x);
   };
-  return __findTerms(query);
+
+  if (typeof query[2] === 'object' && query[2].db !== undefined) {
+    connectionDbName = query[2].db;
+    termsFound = termsFound.concat(__findTerms(query[2].db));
+  }
+  return termsFound.concat(__findTerms(query));
 };
 
 
