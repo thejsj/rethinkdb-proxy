@@ -1,7 +1,7 @@
 /*jshint esnext:true */
 import r from 'rethinkdb';
 import Promise from 'bluebird';
-import startServer from '../server';
+import RethinkDBProxy from '../server';
 import should from 'should';
 import { makeExecuteQuery, makeExecuteProxyQuery, makeAssertQuery, makeCreateDatabase, makeDropDatabase } from './utils';
 import protoDef from '../driver/proto-def';
@@ -30,15 +30,16 @@ describe('Unallowed Queries', () => {
     this.timeout(5000);
     createDatabase()
       .then(() => {
-        server = startServer({
+        server = new RethinkDBProxy({
           port: proxyPort,
-        }, done);
+        });
+        server.listen(done);
       });
   });
 
   after((done) => {
     dropDatabase()
-    .then(server.close)
+    .then(server.close.bind(server))
     .then(done.bind(null, null));
   });
 

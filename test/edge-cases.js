@@ -1,7 +1,7 @@
 /*jshint esnext:true */
 import r from 'rethinkdb';
 import Promise from 'bluebird';
-import startServer from '../server';
+import RethinkDBProxy from '../server';
 import should from 'should';
 import { makeExecuteQuery, makeExecuteProxyQuery, makeAssertQuery, makeCreateDatabase, makeDropDatabase } from './utils';
 import protoDef from '../driver/proto-def';
@@ -34,10 +34,11 @@ describe('Edge Cases', () => {
       createDatabase()
         .then(() => {
           return new Promise(function (resolve, reject) {
-            server = startServer({
+            server = new RethinkDBProxy({
               port: proxyPort,
               allowReplace: true,
-            }, resolve);
+            });
+            server.listen(resolve);
           });
         })
         .then(() => {
@@ -56,7 +57,7 @@ describe('Edge Cases', () => {
 
     after((done) => {
       dropDatabase()
-      .then(server.close)
+      .then(server.close.bind(server))
       .then(done.bind(null, null));
     });
 
@@ -81,10 +82,11 @@ describe('Edge Cases', () => {
       createDatabase()
         .then(() => {
           return new Promise(function (resolve, reject) {
-            server = startServer({
+            server = new RethinkDBProxy({
               port: proxyPort,
               allowInsert: true,
-            }, resolve);
+            });
+            server.listen(resolve);
           });
         })
         .then(() => {
@@ -103,7 +105,7 @@ describe('Edge Cases', () => {
 
     after((done) => {
       dropDatabase()
-      .then(server.close)
+      .then(server.close.bind(server))
       .then(done.bind(null, null));
     });
 
