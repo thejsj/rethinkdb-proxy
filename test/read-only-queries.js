@@ -33,7 +33,7 @@ describe('Unallowed Queries', () => {
         server = new RethinkDBProxy({
           port: proxyPort,
         });
-        server.listen(done);
+        return server.listen().then(done);
       });
   });
 

@@ -138,7 +138,7 @@ describe('Database and Table Access', () => {
           return new Promise(function (resolve, reject) {
             server = new RethinkDBProxy({
               port: proxyPort,
-              db: [dbName, 'someOtherDb']
+              dbs: [dbName, 'someOtherDb']
             });
             server.listen(resolve);
           });
