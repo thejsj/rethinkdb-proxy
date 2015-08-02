@@ -4,12 +4,11 @@
   [ ] database `--db test,hello`
   [ ] Prevent connection if database is passed that is not allowed (Throw error)
   [ ] tables `--table people, trains`, `--table test.people, hello.trains`
+  [ ] Handle `r.args`
+  [ ] Handle getting the dbName, tableName dynamically
 [ ] README
   [ ] Wrap allow around code
   [ ] Add api links to docs
-[ ] Refactor
-  [ ] Refactor code so that it usess classes
-  [ ] Break up codes into more modular structure
 [ ] API
   [ ] Better name for allowSysDbAccess
 [ ] Test changefeeds
@@ -25,6 +24,9 @@
 
 ### Done
 
+[x] Refactor
+  [x] Refactor code so that it uses classes
+  [x] Break up codes into more modular structure
 [x] Opt-in Options:
   [x] Allow Insert `--allow-insert`
   [x] Allow Delete`--allow-delete`

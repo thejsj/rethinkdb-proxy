@@ -222,6 +222,10 @@ describe('Database and Table Access', () => {
 
     it('should not allow access to a table if not allowed', (done) => {
       executeProxyQuery(r.db(dbName).table('someOtherTable'))
+        .catch(function (err) {
+          console.log('err', err);
+          throw err;
+        })
         .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
         .nodeify(done);
     });
@@ -235,7 +239,7 @@ describe('Database and Table Access', () => {
     });
 
     describe('Connection', () => {
-      it('should throw an error when trying to connect with an unallowed database', (done) => {
+      it('should throw an error when trying query a table with an unallowed default database', (done) => {
         r.connect({ port: proxyPort, db: dbName })
           .then(function (conn) {
             return r.table(tableName).run(conn);
