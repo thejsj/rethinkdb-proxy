@@ -69,12 +69,19 @@ let checkForDeleteInInsert = function (terms, command, args, query_opts) {
 let checkForTableAccess =  function (opts, connectionDbName, command, args, query_opts) {
   if (command === protoDef.Term.TermType.TABLE && typeof opts === 'object') {
     let tableName = args[args.length - 1];
-    //console.log('tableName', tableName);
-    //console.log(command, args, query_opts);
-    //if (Array.isArray(opts.db) && opts.db.length > 0 && !opts.db.includes(dbName)) {
-      //return { 'error': `Access to the \`{$dbName}\` database is not allowed.
-        //Database must be inlcluded in \`db\` parameter` };
-    //}
+    let dbName = connectionDbName;
+    console.log('tableName', tableName, dbName);
+    console.log(command, args, query_opts);
+    if (opts.dbs.$$count > 0 && (typeof opts.dbs[dbName] !== 'object' || !opts.dbs[dbName].allowed)) {
+      if (
+          opts.dbs[dbName].tables[tableName].$$count > 0 &&
+          (typeof opts.dbs[dbName].tables[tableName] !== 'object' ||
+          opts.dbs[dbName].tables[tableName].allowed)
+      ) {
+        return { 'error': `Access to the \`{$dbName}\` database is not allowed.
+          //Database must be inlcluded in \`db\` parameter` };
+      }
+    }
   }
   return [];
 };
@@ -140,7 +147,7 @@ export const findTerms = (opts, terms, query) => {
   };
 
   if (typeof query[2] === 'object' && query[2].db !== undefined) {
-    connectionDbName = query[2].db;
+    connectionDbName = query[2].db[1][0];
     termsFound = termsFound.concat(__findTerms(query[2].db));
   }
   return termsFound.concat(__findTerms(query));
