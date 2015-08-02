@@ -1,3 +1,10 @@
+import taser from 'taser';
+
+const assertStringOrArray = taser(['string', 'array']);
+const assertBoolean = taser(['boolean']);
+const assertNumber = taser(['number']);
+const assertString = taser(['string']);
+
 export default (opts) => {
   // Define Options and defaults
   opts = Object.assign({
@@ -26,20 +33,50 @@ export default (opts) => {
     allowJavascript: false
   }, opts);
 
-  // Clean options
-  if (typeof opts.dbs === 'string') {
-    opts.dbs = [opts.dbs];
+  // Ensure validity of inputs
+  assertNumber(opts.port);
+  assertNumber(opts.rdbPort);
+  assertString(opts.rdbHost);
+  assertStringOrArray(opts.dbs);
+  assertStringOrArray(opts.tables);
+  for (let key in opts) {
+    if (opts.hasOwnProperty(key) && key.substring(0, 5) === 'allow') {
+      assertBoolean(opts[key]);
+    }
   }
+
+  // Clean options
+  if (typeof opts.dbs === 'string') opts.dbs = [opts.dbs];
+  if (typeof opts.tables === 'string') opts.tables = [opts.tables];
+
   // Create object for dbs
   let databases = opts.dbs;
   opts.dbs = {
     $$count: 0 // `$` not allowed in RethinkDB database names
   };
   databases.forEach(function (database) {
-    opts.dbs[database] = { allowed: true };
+    opts.dbs[database] = { allowed: true, tables: { }, $$count: 0 };
     // `$` not allowed in RethinkDB database names
     opts.dbs.$$count += 1;
   });
+  opts.tables.forEach(function (tableName) {
+    if (opts.db.$$count > 1) {
+      let split = tableName.split('.');
+      if (split.length !== 2) {
+        let message = `If more than 1 database is passed, `;
+        message += `all table names must be dot (\`.\`) separated with the table names.`;
+        message += ` \`${tableName}\` is not valid.`;
+        throw new Error(message);
+      }
+      if (opts.db[split[0]] === undefined) {
+        let message = `Database ${split[0]} in ${tableName} was not declared`;
+        throw new Error(message);
+      }
+      opts.db[split[0]].tables[split[1]] = { allowed: true };
+      opts.db[split[0]].$$count += 1;
+    }
+  });
+  console.log(opts.dbs);
 
   // By default, don't allow any of these terms
   opts.unallowedTerms = [
