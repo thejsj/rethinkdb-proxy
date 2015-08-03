@@ -60,7 +60,7 @@ export default (opts) => {
     opts.dbs.$$count += 1;
   });
   opts.tables.forEach(function (tableName) {
-    if (opts.db.$$count > 1) {
+    if (opts.dbs.$$count > 1) {
       let split = tableName.split('.');
       if (split.length !== 2) {
         let message = `If more than 1 database is passed, `;
@@ -68,15 +68,14 @@ export default (opts) => {
         message += ` \`${tableName}\` is not valid.`;
         throw new Error(message);
       }
-      if (opts.db[split[0]] === undefined) {
+      if (opts.dbs[split[0]] === undefined) {
         let message = `Database ${split[0]} in ${tableName} was not declared`;
         throw new Error(message);
       }
-      opts.db[split[0]].tables[split[1]] = { allowed: true };
-      opts.db[split[0]].$$count += 1;
+      opts.dbs[split[0]].tables[split[1]] = { allowed: true };
+      opts.dbs[split[0]].$$count += 1;
     }
   });
-  console.log(opts.dbs);
 
   // By default, don't allow any of these terms
   opts.unallowedTerms = [

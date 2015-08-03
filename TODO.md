@@ -1,11 +1,11 @@
 # TODO
 
-[ ] Allow only a single database/table
-  [ ] database `--db test,hello`
-  [ ] Prevent connection if database is passed that is not allowed (Throw error)
-  [ ] tables `--table people, trains`, `--table test.people, hello.trains`
-  [ ] Handle `r.args`
-  [ ] Handle getting the dbName, tableName dynamically
+[x] Allow only a single database/table
+  [x] database `--db test,hello`
+  [x] Prevent connection if database is passed that is not allowed (Throw error)
+  [x] tables `--table people, trains`, `--table test.people, hello.trains`
+  [ ] Prevent `r.args`
+  [ ] Prevent getting the dbName, tableName dynamically
 [ ] README
   [ ] Wrap allow around code
   [ ] Add api links to docs
@@ -13,7 +13,6 @@
   [ ] Better name for allowSysDbAccess
 [ ] Test changefeeds
 [ ] Test cursors
-[ ] Ask: When a database is passed to a connection, is that passed along to the server? It seems it stays in the driver.
 
 ## Future
 
