@@ -67,8 +67,7 @@ const BufferParser = class BufferParser {
       if (splitString[i] === '[') {
         openBrackets += 1;
         foundBracket = true;
-      }
-      if (splitString[i] === ']') {
+      } else if (splitString[i] === ']') {
         openBrackets -= 1;
       }
       if (openBrackets === 0 && foundBracket) {

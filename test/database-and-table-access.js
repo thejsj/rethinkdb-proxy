@@ -193,6 +193,25 @@ describe('Database and Table Access', () => {
           .nodeify(done);
       });
     });
+
+   describe('Query arguments', () => {
+
+      xit('should not allow a database name to be passed through r.args', (done) => {
+        executeProxyQuery(r.db(r.args([dbName])).tableList())
+          .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+          .nodeify(done);
+      });
+
+      it('should allow a database name to be passed through r.expr', (done) => {
+        executeProxyQuery(r.db(r.expr(dbName)).tableList())
+          .then(function (list) {
+            list.should.be.instanceof(Array);
+          })
+          .nodeify(done);
+      });
+
+    });
+
   });
 
   describe('Table Access', () => {
@@ -272,6 +291,26 @@ describe('Database and Table Access', () => {
          .nodeify(done);
       });
     });
+
+    describe('Query arguments', () => {
+
+      it('should not allow a table name to be passed through r.args', (done) => {
+        executeProxyQuery(r.db(dbName).table(r.args([tableName])))
+          .then(throwError, expectError.bind(null, 'RqlClientError', /TABLE/i))
+          .nodeify(done);
+      });
+
+      it('should not allow a table name to be passed through r.expr', (done) => {
+        executeProxyQuery(r.db(dbName).table(r.expr(tableName)))
+          .then(function (list) {
+            list.should.be.instanceof(Array);
+          })
+          .nodeify(done);
+      });
+
+    });
+
   });
+
 
 });
