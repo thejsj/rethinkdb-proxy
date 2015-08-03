@@ -59,9 +59,9 @@ rethinkDBProxy({ port: 8125, allowInsert: true });
 | `port`             | `--port`                | 8125      | Port in which to listen for driver connections                                 |               |
 | `rdbHost`          | `--rdb-port`            | 28015     | Client Port in which RethinkDB is running                                      |               |
 | `rdbPort`          | `--rdb-host`            | localhost | Host in which RethinkDB is running                                             |               |
-| `db`               | `--db`                  | [ ]       | Database to allow acces to. All except `rethinkdb` allowed by default          |               |
+| `dbs`              | `--dbs`                 | [ ]       | Database to allow acces to. All except `rethinkdb` allowed by default          |               |
 | `allowSysDbAccess` | `--allow-sys-db-access` | false     | Allow access to the `rethinkdb` database                                       |               |
-| `table`            | `--table`               | [ ]       | Tables to allow acces to. Tables must include their datatabase `db.table`      |               |
+| `tables`           | `--tables`              | [ ]       | Tables to allow acces to. Tables must include their datatabase `db.table`      |               |
 | `allowWrites`      | `--allow-writes`        | false     | Allow all operations that write to the database (`insert`, `update`, `delete`) |               |
 | `allowInsert`      | `--allow-insert`        | false     | Allow `insert` queries                                                         |               |
 | `allowUpdate`      | `--allow-update`        | false     | Allow `update` queries                                                         |               |

@@ -70,16 +70,15 @@ let checkForTableAccess =  function (opts, connectionDbName, command, args, quer
   if (command === protoDef.Term.TermType.TABLE && typeof opts === 'object') {
     let tableName = args[args.length - 1];
     let dbName = connectionDbName;
-    console.log('tableName', tableName, dbName);
-    console.log(command, args, query_opts);
-    if (opts.dbs.$$count > 0 && (typeof opts.dbs[dbName] !== 'object' || !opts.dbs[dbName].allowed)) {
+    if (opts.dbs.$$count > 0 && (typeof opts.dbs[dbName] === 'object' && opts.dbs[dbName].allowed)) {
       if (
-          opts.dbs[dbName].tables[tableName].$$count > 0 &&
+          opts.dbs[dbName].$$count > 0 &&
           (typeof opts.dbs[dbName].tables[tableName] !== 'object' ||
-          opts.dbs[dbName].tables[tableName].allowed)
+          !opts.dbs[dbName].tables[tableName].allowed)
       ) {
-        return { 'error': `Access to the \`{$dbName}\` database is not allowed.
-          //Database must be inlcluded in \`db\` parameter` };
+        return { 'error': `Access to the \`{$tableName}\` table is not allowed.` +
+          ` Table must be declared in the \`tables\` and` +
+          ` database must be inlcluded in \`dbs\` parameter` };
       }
     }
   }

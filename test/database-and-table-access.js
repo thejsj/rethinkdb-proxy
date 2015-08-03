@@ -205,8 +205,8 @@ describe('Database and Table Access', () => {
           return new Promise(function (resolve, reject) {
             server = new RethinkDBProxy({
               port: proxyPort,
-              db: [dbName, 'someOtherDb'],
-              table: tableName
+              dbs: [dbName, 'someOtherDb'],
+              tables: dbName + '.' + tableName
             });
             server.listen(resolve);
           });
@@ -221,14 +221,18 @@ describe('Database and Table Access', () => {
     });
 
     it('should not allow access to a table if not allowed', (done) => {
-      executeProxyQuery(r.db(dbName).table('someOtherTable'))
-        .catch(function (err) {
-          console.log('err', err);
-          throw err;
-        })
-        .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
-        .nodeify(done);
-    });
+      r.connect({ db: dbName }).then(function (conn) {
+        return r.tableCreate('someOtherTable').run(conn)
+          .then(function () {
+            return conn.close();
+          });
+      })
+      .then(function () {
+        return executeProxyQuery(r.db(dbName).table('someOtherTable'))
+          .then(throwError, expectError.bind(null, 'RqlClientError', /TABLE/i))
+          .nodeify(done);
+      });
+   });
 
     it('should allow access to a table if allowed', (done) => {
       executeProxyQuery(r.db(dbName).table(tableName))
@@ -239,12 +243,32 @@ describe('Database and Table Access', () => {
     });
 
     describe('Connection', () => {
-      it('should throw an error when trying query a table with an unallowed default database', (done) => {
-        r.connect({ port: proxyPort, db: dbName })
+      it('should not throw an error when trying query a table with an unallowed default database', (done) => {
+        r.connect({ port: proxyPort, db: 'someOtherDbNotAllowed' })
           .then(function (conn) {
             return r.table(tableName).run(conn);
           })
          .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+         .nodeify(done);
+      });
+
+      it('should not throw an error when trying query a table with an unallowed table', (done) => {
+        r.connect({ port: proxyPort, db: dbName })
+          .then(function (conn) {
+            return r.table(tableName).coerceTo('array').run(conn);
+          })
+          .then(function (list) {
+            return list.should.be.instanceof(Array);
+          })
+         .nodeify(done);
+      });
+
+      it('should throw an error when trying query a table with an unallowed default database', (done) => {
+        r.connect({ port: proxyPort, db: dbName })
+          .then(function (conn) {
+            return r.table('someOtherTable').run(conn);
+          })
+         .then(throwError, expectError.bind(null, 'RqlClientError', /TABLE/i))
          .nodeify(done);
       });
     });
