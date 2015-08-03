@@ -70,15 +70,26 @@ let checkForTableAccess =  function (opts, connectionDbName, command, args, quer
   if (command === protoDef.Term.TermType.TABLE && typeof opts === 'object') {
     let tableName = args[args.length - 1];
     let dbName = connectionDbName;
+    /*!
+     * Since the name of a table can be passed dynamically and this introducues
+     * a lot of complexity to determining whether a tables is allowed, only
+     * allow strings, which cover most cases
+     */
+    if (typeof tableName !== 'string') {
+      return [{
+        'error': `Only strings are allowed for table names while using the \`table\` command`
+      }];
+    }
     if (opts.dbs.$$count > 0 && (typeof opts.dbs[dbName] === 'object' && opts.dbs[dbName].allowed)) {
       if (
           opts.dbs[dbName].$$count > 0 &&
           (typeof opts.dbs[dbName].tables[tableName] !== 'object' ||
           !opts.dbs[dbName].tables[tableName].allowed)
       ) {
-        return { 'error': `Access to the \`{$tableName}\` table is not allowed.` +
+        return [{ 'error': `Access to the \`{$tableName}\` table is not allowed.` +
           ` Table must be declared in the \`tables\` and` +
-          ` database must be inlcluded in \`dbs\` parameter` };
+          ` database must be inlcluded in \`dbs\` parameter`
+        }];
       }
     }
   }
@@ -88,6 +99,16 @@ let checkForTableAccess =  function (opts, connectionDbName, command, args, quer
 let checkForDatabaseAccess =  function (opts, connectionDbName, command, args, query_opts) {
   if (command === protoDef.Term.TermType.DB && typeof opts === 'object') {
     let dbName = args[args.length - 1];
+    /*!
+     * Since the name of a database can be passed dynamically and this introduces
+     * a lot of complexity to determining whether a tables is allowed, only
+     * allow strings, which cover most cases
+     */
+    if (typeof dbName !== 'string') {
+      return [{
+        'error': `Only strings are allowed for database names while using the \`db\` command`
+      }];
+    }
     if (!opts.allowSysDbAccess && dbName === 'rethinkdb') {
       return [{
         'error': 'Access to the `rethinkdb` database is not allowed unless explicitly stated with `allowSysDbAccess`'

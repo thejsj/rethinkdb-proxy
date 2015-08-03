@@ -1,11 +1,13 @@
 #! /usr/bin/env node
 var cli = require('cli').enable('status');
 var taser = require('taser');
-require("babel/register");
-var rethinkDBProxy = require('../server/');
+require('babel/register');
+var RethinkDBProxy = require('../server/');
 
 cli.parse({
   'port':               [false, 'Port in which to listen for driver connections', 'number', null],
+  'dbs':                [false, 'Databases allowed', 'string', null],
+  'tables':             [false, 'Tables allowed. Must include dot (`db.table`) if multiple database allowed.', 'string', null],
   'allow-writes':       [false, 'Allow all operations that write to the database (`insert`, `update`, `delete`)'],
   'allow-insert':       [false, 'Allow `insert` queries'],
   'allow-update':       [false, 'Allow `update` queries'],
@@ -32,5 +34,6 @@ cli.main(function (args, _opts) {
       opts[key.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); })] = _opts[key];
     }
   }
-  rethinkDBProxy(opts);
+  var server = new RethinkDBProxy(opts);
+  server.listen(opts.port);
 });
