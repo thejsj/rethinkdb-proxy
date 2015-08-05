@@ -494,12 +494,9 @@
 
         return function() {
           var port = _this.rawSocket.localPort;
-          console.log('connect');
-          console.log(port);
           if (connections[port] === undefined) {
             connections[port] = _this.rawSocket;
           }
-          console.log('^^ connect');
           var auth_buffer, auth_length, handshake_callback, protocol, version;
           version = new Buffer(4);
           version.writeUInt32LE(protoVersion, 0);
@@ -545,13 +542,10 @@
       })(this));
       this.rawSocket.on('close', (function(_this) {
         return function() {
-          console.log('Close connection');
-          console.log(port);
+          var port = _this.rawSocket._sockname.port;
           if (connections[port] !== undefined) {
             delete connections[port];
           }
-          console.log('^^ Close connection');
-          v
           if (_this.isOpen()) {
             _this.close({
               noreplyWait: false
@@ -635,7 +629,6 @@
       lengthBuffer = new Buffer(4);
       lengthBuffer.writeUInt32LE(chunk.length, 0);
       this.rawSocket.write(lengthBuffer);
-      this.rawSocket.write(chunk);
       return;
     };
 

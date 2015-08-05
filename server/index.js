@@ -112,7 +112,9 @@ export default class RethinkDBProxy {
       }
       sendResponseToServer(query, token);
     });
-    clientSocket.on('data', parser.append.bind(parser));
+    clientSocket.on('data', function (data) {
+      return parser.append(data);
+    });
   }
 }
 
