@@ -54,28 +54,28 @@ rethinkDBProxy({ port: 8125, allowInsert: true });
 ```
 ## Options
 
-| Module Parameter   | CLI Parameter           | Default   | Description                                                                    | API Reference |
-|--------------------|-------------------------|-----------|--------------------------------------------------------------------------------|---------------|
-| `port`             | `--port`                | 8125      | Port in which to listen for driver connections                                 |               |
-| `rdbHost`          | `--rdb-port`            | 28015     | Client Port in which RethinkDB is running                                      |               |
-| `rdbPort`          | `--rdb-host`            | localhost | Host in which RethinkDB is running                                             |               |
-| `dbs`              | `--dbs`                 | [ ]       | Database to allow acces to. All except `rethinkdb` allowed by default          |               |
-| `allowSysDbAccess` | `--allow-sys-db-access` | false     | Allow access to the `rethinkdb` database                                       |               |
-| `tables`           | `--tables`              | [ ]       | Tables to allow acces to. Tables must include their datatabase `db.table`      |               |
-| `allowWrites`      | `--allow-writes`        | false     | Allow all operations that write to the database (`insert`, `update`, `delete`) |               |
-| `allowInsert`      | `--allow-insert`        | false     | Allow `insert` queries                                                         |               |
-| `allowUpdate`      | `--allow-update`        | false     | Allow `update` queries                                                         |               |
-| `allowDelete`      | `--allow-delete`        | false     | Allow `delete` queries                                                         |               |
-| `allowReplace`     | `--allow-replace`       | false     | Allow `replace` queries                                                        |               |
-| `allowDbCreate`    | `--allow-db-create`     | false     | Allow `dbCreate` queries                                                       |               |
-| `allowDbDrop`      | `--allow-db-drop`       | false     | Allow `dbDrop` queries                                                         |               |
-| `allowTableCreate` | `--allow-table-create`  | false     | Allow `tableCreate` queries                                                    |               |
-| `allowTableDrop`   | `--allow-table-drop`    | false     | Allow `tableDrop` queries                                                      |               |
-| `allowIndexes`     | `--allow-indexes`       | false     | Allow all operations on indexes (`indexCreate`, `indexDrop`, `indexRename`)    |               |
-| `allowIndexCreate` | `--allow-index-create`  | false     | Allow `indexCreate` queries                                                    |               |
-| `allowIndexDrop`   | `--allow-index-drop`    | false     | Allow `indexDrop` queries                                                      |               |
-| `allowIndexRename` | `--allow-index-rename`  | false     | Allow `indexRename` queries                                                    |               |
-| `allowReconfigure` | `--allow-reconfigure`   | false     | Allow `reconfigure` queries                                                    |               |
-| `allowRebalance`   | `--allow-rebalance`     | false     | Allow `rebalance` queries                                                      |               |
-| `allowHttp`        | `--allow-http`          | false     | Allow queries with the `http` term                                             |               |
-| `allowJavascript`  | `--allow-javascript`    | false     | Allow queries with the `js` term                                               |               |
+| Module Parameter   | CLI Parameter           | Default     | Description                                                                    | API Reference |
+|--------------------|-------------------------|-------------|--------------------------------------------------------------------------------|---------------|
+| `port`             | `--port`                | `8125`      | Port in which to listen for driver connections                                 |               |
+| `rdbHost`          | `--rdb-port`            | `28015`     | Client Port in which RethinkDB is running                                      |               |
+| `rdbPort`          | `--rdb-host`            | `localhost` | Host in which RethinkDB is running                                             |               |
+| `dbs`              | `--dbs`                 | `[ ]`       | Database to allow acces to. All except `rethinkdb` allowed by default.         |               |
+| `allowSysDbAccess` | `--allow-sys-db-access` | `false`     | Allow access to the `rethinkdb` database                                       |               |
+| `tables`           | `--tables`              | `[ ]`       | Tables to allow acces to. Tables must include their datatabase `db.table`      |               |
+| `allowWrites`      | `--allow-writes`        | `false`     | Allow all operations that write to the database (`insert`, `update`, `delete`) |               |
+| `allowInsert`      | `--allow-insert`        | `false`     | Allow `insert` queries                                                         |               |
+| `allowUpdate`      | `--allow-update`        | `false`     | Allow `update` queries                                                         |               |
+| `allowDelete`      | `--allow-delete`        | `false`     | Allow `delete` queries                                                         |               |
+| `allowReplace`     | `--allow-replace`       | `false`     | Allow `replace` queries                                                        |               |
+| `allowDbCreate`    | `--allow-db-create`     | `false`     | Allow `dbCreate` queries                                                       |               |
+| `allowDbDrop`      | `--allow-db-drop`       | `false`     | Allow `dbDrop` queries                                                         |               |
+| `allowTableCreate` | `--allow-table-create`  | `false`     | Allow `tableCreate` queries                                                    |               |
+| `allowTableDrop`   | `--allow-table-drop`    | `false`     | Allow `tableDrop` queries                                                      |               |
+| `allowIndexes`     | `--allow-indexes`       | `false`     | Allow all operations on indexes (`indexCreate`, `indexDrop`, `indexRename`)    |               |
+| `allowIndexCreate` | `--allow-index-create`  | `false`     | Allow `indexCreate` queries                                                    |               |
+| `allowIndexDrop`   | `--allow-index-drop`    | `false`     | Allow `indexDrop` queries                                                      |               |
+| `allowIndexRename` | `--allow-index-rename`  | `false`     | Allow `indexRename` queries                                                    |               |
+| `allowReconfigure` | `--allow-reconfigure`   | `false`     | Allow `reconfigure` queries                                                    |               |
+| `allowRebalance`   | `--allow-rebalance`     | `false`     | Allow `rebalance` queries                                                      |               |
+| `allowHttp`        | `--allow-http`          | `false`     | Allow queries with the `http` term                                             |               |
+| `allowJavascript`  | `--allow-javascript`    | `false`     | Allow queries with the `js` term                                               |               |

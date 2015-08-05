@@ -138,7 +138,7 @@ describe('Database and Table Access', () => {
           return new Promise(function (resolve, reject) {
             server = new RethinkDBProxy({
               port: proxyPort,
-              dbs: [dbName, 'someOtherDb']
+              dbs: [dbName, 'someOtherDb'],
             });
             server.listen(resolve);
           });
@@ -196,8 +196,12 @@ describe('Database and Table Access', () => {
 
    describe('Query arguments', () => {
 
-      xit('should not allow a database name to be passed through r.args', (done) => {
-        executeProxyQuery(r.db(r.args([dbName])).tableList())
+      it('should not allow a database name to be passed through r.args', function (done) {
+        // For some reason, using `executeProxyQuery` doesn't work...
+        r.connect({ port: proxyPort }).then(function (conn) {
+          return r.db(r.args([dbName])).tableList().run(conn)
+            .then(conn.close.bind(conn));
+        })
           .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
           .nodeify(done);
       });
@@ -239,7 +243,8 @@ describe('Database and Table Access', () => {
       .then(done.bind(null, null));
     });
 
-    it('should not allow access to a table if not allowed', (done) => {
+    it('should not allow access to a table if not allowed', function (done) {
+      this.timeout(5000);
       r.connect({ db: dbName }).then(function (conn) {
         return r.tableCreate('someOtherTable').run(conn)
           .then(function () {
@@ -300,11 +305,17 @@ describe('Database and Table Access', () => {
           .nodeify(done);
       });
 
-      it('should not allow a table name to be passed through r.expr', (done) => {
+      it('should allow a table name to be passed through r.expr', (done) => {
         executeProxyQuery(r.db(dbName).table(r.expr(tableName)))
           .then(function (list) {
             list.should.be.instanceof(Array);
           })
+          .nodeify(done);
+      });
+
+      it('should not allow a table name to be passed through a ReQL expression', (done) => {
+        executeProxyQuery(r.db(dbName).table(r.db(dbName).tableList()(0)))
+          .then(throwError, expectError.bind(null, 'RqlClientError', /TABLE/i))
           .nodeify(done);
       });
 
