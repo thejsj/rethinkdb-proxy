@@ -15,7 +15,7 @@ const BufferParser = class BufferParser {
 
   append (buff) {
     if (buff !== undefined) {
-      this[_queue_] = Buffer.concat([buff, buff]);
+      this[_queue_] = Buffer.concat([this[_queue_], buff]);
     }
     if (this.protoVersion === null) {
       if (Buffer.byteLength(this[_queue_]) >= 4) {
@@ -63,6 +63,7 @@ const BufferParser = class BufferParser {
     let splitString = this[_queue_].toString().split('');
     let openBrackets = 0;
     let foundBracket = false;
+    let newQueue = null;
     for (let i = 0; i < splitString.length; i += 1) {
       if (splitString[i] === '[') {
         openBrackets += 1;
@@ -74,14 +75,17 @@ const BufferParser = class BufferParser {
         let token = this[_queue_].slice(0, 8).readUInt32LE();
         let byteLength = this[_queue_].slice(8, 12).readUInt32LE();
         let query = this[_queue_].slice(12, i + 1);
+        newQueue = this[_queue_].slice(i + 1);
         if (Buffer.byteLength(query) === byteLength) {
           let json = JSON.parse(query.toString());
+          this[_queue_] = new Buffer(0);
           this.fireEvent('query', json, token);
         }
-        if (i + 1 >= splitString.length) this[_queue_] = new Buffer(splitString.slice(i + 1));
-        else this[_queue_] = new Buffer(0);
         break;
       }
+    }
+    if (newQueue !== null && newQueue.length > 0) {
+      this.append(newQueue);
     }
   }
 

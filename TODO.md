@@ -1,17 +1,9 @@
 # TODO
 
-[x] Allow only a single database/table
-  [x] database `--db test,hello`
-  [x] Prevent connection if database is passed that is not allowed (Throw error)
-  [x] tables `--table people, trains`, `--table test.people, hello.trains`
-  [ ] Prevent `r.args`
-  [ ] Prevent getting the dbName, tableName dynamically
 [ ] README
-  [ ] Wrap allow around code
+  [x] Wrap allow around code
   [ ] Add api links to docs
-[ ] API
-  [ ] Better name for allowSysDbAccess
-[ ] Test changefeeds
+[ ] Test multiple concurrent queries from the same connection
 [ ] Test cursors
 
 ## Future
@@ -23,6 +15,15 @@
 
 ### Done
 
+[x] Test changefeeds
+[x] API
+  [x] Better name for allowSysDbAccess
+[x] Allow only a single database/table
+  [x] database `--db test,hello`
+  [x] Prevent connection if database is passed that is not allowed (Throw error)
+  [x] tables `--table people, trains`, `--table test.people, hello.trains`
+  [x] Prevent `r.args`
+  [x] Prevent getting the dbName, tableName dynamically
 [x] Refactor
   [x] Refactor code so that it uses classes
   [x] Break up codes into more modular structure
