@@ -14,6 +14,7 @@ const BufferParser = class BufferParser {
   }
 
   append (buff) {
+    console.log('Append');
     if (buff !== undefined) {
       this[_queue_] = Buffer.concat([this[_queue_], buff]);
     }
@@ -60,10 +61,12 @@ const BufferParser = class BufferParser {
   }
 
   parseQuery () {
+    console.log('Pasre query');
     let splitString = this[_queue_].toString().split('');
     let openBrackets = 0;
     let foundBracket = false;
     let newQueue = null;
+    console.log(this[_queue_].toString());
     for (let i = 0; i < splitString.length; i += 1) {
       if (splitString[i] === '[') {
         openBrackets += 1;
