@@ -1,5 +1,5 @@
 /*jshint esnext:true */
-import r from '../driver';
+import r from 'rethinkdb';
 import Promise from 'bluebird';
 import RethinkDBProxy from '../server';
 import should from 'should';
@@ -33,13 +33,19 @@ describe('Parallel Queries', () => {
       .then(() => {
         return r.connect().then((conn) => {
           return r.db(dbName).table(tableName)
-            .insert(r.json(r.http(
-              'https://raw.githubusercontent.com/thejsj/sample-data/master/data/countries.json'
-            ))).run(conn)
-              .then(conn.close.bind(conn, { noreplyWait: false }));
+            .insert([
+              { name: 'Germany' },
+              { name: 'Bhutan' },
+              { name: 'Maldives' },
+            ])
+            .run(conn);
+        })
+        .catch(function (err) {
+          console.log(err);
         });
       })
       .then(() => {
+        console.log(2);
         return new Promise(function (resolve, reject) {
           console.log('Start Server');
           server = new RethinkDBProxy({
