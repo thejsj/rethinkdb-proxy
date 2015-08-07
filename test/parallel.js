@@ -25,7 +25,14 @@ let expectError = function (errorName, errorMessageMatch, err) {
   (err instanceof Error).should.equal(true);
 };
 
+
 describe('Parallel Queries', () => {
+
+  let testData = [
+    { name: 'Germany' },
+    { name: 'Bhutan' },
+    { name: 'Maldives' },
+  ];
 
   before(function (done) {
     this.timeout(10000);
@@ -33,11 +40,7 @@ describe('Parallel Queries', () => {
       .then(() => {
         return r.connect().then((conn) => {
           return r.db(dbName).table(tableName)
-            .insert([
-              { name: 'Germany' },
-              { name: 'Bhutan' },
-              { name: 'Maldives' },
-            ])
+            .insert(testData)
             .run(conn);
         });
       })
@@ -58,7 +61,7 @@ describe('Parallel Queries', () => {
     .then(done.bind(null, null));
   });
 
-  it('should handle parallel connections', function (done) {
+  it('should handle parallel connections', (done) => {
     //this.timeout(15000);
     let query = function (countryName) {
       return r.db(dbName).table(tableName)
@@ -67,17 +70,14 @@ describe('Parallel Queries', () => {
     };
     let query1 = query('Germany');
     let query2 = query('Maldives');
-
     let arr = (() => {
       let arr = [];
-      for (let i = 0; i < 5; i += 1)
-        arr.push(i);
+      for (let i = 0; i < 5; i += 1) arr.push(i);
       return arr;
     }());
-    r.connect({ port: proxyPort }).then(function (conn1) {
+    r.connect({ port: proxyPort }).then((conn1) => {
       return Promise.all(
-        []
-          .concat(arr.map(() => query1.run(conn1) ))
+        [].concat(arr.map(() => query1.run(conn1) ))
           .concat(arr.map(() => query2.run(conn1) ))
       )
       .then((res) => {
@@ -86,6 +86,20 @@ describe('Parallel Queries', () => {
       });
     })
       .nodeify(done);
+  });
+
+  it('should handle parallel cursors', (done) => {
+    r.connect({ port: proxyPort }).then((conn1) => {
+      return r.db(dbName).table(tableName).run(conn1)
+       .then((cursor) => {
+        let processRow = (err, row) => {
+          if (err === null) return cursor.next(processRow);
+          if (err.msg === 'No more rows in the cursor.') return done();
+          return done(err);
+        };
+        cursor.next(processRow);
+       });
+    });
   });
 
 });
