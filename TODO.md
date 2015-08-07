@@ -3,7 +3,10 @@
 [ ] README
   [x] Wrap allow around code
   [ ] Add api links to docs
-[ ] Test cursors
+[ ] Add logging
+[ ] Add error handling for non-rethinkdb driver connections
+[ ] Keep server running on error
+[ ] It should handle queries that throw errors
 
 ## Future
 
@@ -14,6 +17,7 @@
 
 ### Done
 
+[x] Test cursors
 [x] Test multiple concurrent queries from the same connection
 [x] Test changefeeds
 [x] API
