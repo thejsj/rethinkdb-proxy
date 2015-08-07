@@ -88,14 +88,14 @@ rethinkDBProxy({ port: 8125, allowInsert: true });
 Port in which to listen for driver connections
 
 | Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                        |
-|--------------------|-------------------------|-------------|------------------------------------------------------------------------------------------------------|
-| `rdbHost`          | `--rdb-port`            | `28015`     | [http://www.rethinkdb.com/api/javascript/connect/](http://www.rethinkdb.com/api/javascript/connect/) |
+|--------------------|-------------------------|-------------|-------------------------------------------------------------|
+| `rdbHost`          | `--rdb-port`            | `28015`     | [connect](http://www.rethinkdb.com/api/javascript/connect/) |
 
 Client Port in which RethinkDB is running
 
 | Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                        |
-|--------------------|-------------------------|-------------|------------------------------------------------------------------------------------------------------|
-| `rdbPort`          | `--rdb-host`            | `localhost` | [http://www.rethinkdb.com/api/javascript/connect/](http://www.rethinkdb.com/api/javascript/connect/) |
+|--------------------|-------------------------|-------------|--------------------------------------------------------------|
+| `rdbPort`          | `--rdb-host`            | `localhost` | [connect](http://www.rethinkdb.com/api/javascript/connect/) |
 
 Host in which RethinkDB is running
 
@@ -125,100 +125,100 @@ Tables to allow acces to. Tables must include their datatabase `db.table`
 
 Allow all operations that write to the database (`insert`, `update`, `delete`) 
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowInsert`      | `--allow-insert`        | `false`     | [http://www.rethinkdb.com/api/javascript/insert/](http://www.rethinkdb.com/api/javascript/insert/) |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                             |
+|--------------------|-------------------------|-------------|-----------------------------------------------------------|
+| `allowInsert`      | `--allow-insert`        | `false`     | [insert](http://www.rethinkdb.com/api/javascript/insert/) |
 
 Allow `insert` queries.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowUpdate`      | `--allow-update`        | `false`     | [http://www.rethinkdb.com/api/javascript/update/](http://www.rethinkdb.com/api/javascript/update/) |               |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                             |
+|--------------------|-------------------------|-------------|-----------------------------------------------------------|
+| `allowUpdate`      | `--allow-update`        | `false`     | [update](http://www.rethinkdb.com/api/javascript/update/) |
 
 Allow `update` queries.
 
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowDelete`      | `--allow-delete`        | `false`     | [http://www.rethinkdb.com/api/javascript/delete/](http://www.rethinkdb.com/api/javascript/delete/) |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                             |
+|--------------------|-------------------------|-------------|-----------------------------------------------------------|
+| `allowDelete`      | `--allow-delete`        | `false`     | [delete](http://www.rethinkdb.com/api/javascript/delete/) |
 
 Allow `delete` queries.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowReplace`     | `--allow-replace`       | `false`     | [http://www.rethinkdb.com/api/javascript/delete/](http://www.rethinkdb.com/api/javascript/delete/) |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                              |
+|--------------------|-------------------------|-------------|------------------------------------------------------------|
+| `allowReplace`     | `--allow-replace`       | `false`     | [replace](http://www.rethinkdb.com/api/javascript/delete/) |
 
 Allow `replace` queries.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                            |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------------|
-| `allowDbCreate`    | `--allow-db-create`     | `false`     | [http://www.rethinkdb.com/api/javascript/db_create/](http://www.rethinkdb.com/api/javascript/db_create/) |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                                  |
+|--------------------|-------------------------|-------------|----------------------------------------------------------------|
+| `allowDbCreate`    | `--allow-db-create`     | `false`     | [dbCreate](http://www.rethinkdb.com/api/javascript/db_create/) |
 
 Allow `dbCreate` queries
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                        |
-|--------------------|-------------------------|-------------|------------------------------------------------------------------------------------------------------|
-| `allowDbDrop`      | `--allow-db-drop`       | `false`     | [http://www.rethinkdb.com/api/javascript/db_drop/](http://www.rethinkdb.com/api/javascript/db_drop/) |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                              |
+|--------------------|-------------------------|-------------|------------------------------------------------------------|
+| `allowDbDrop`      | `--allow-db-drop`       | `false`     | [dbDrop](http://www.rethinkdb.com/api/javascript/db_drop/) |
 
 Allow `dbDrop` queries
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                                  |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------------------|
-| `allowTableCreate` | `--allow-table-create`  | `false`     | [http://www.rethinkdb.com/api/javascript/table_create/](http://www.rethinkdb.com/api/javascript/table_create/) |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                                        |
+|--------------------|-------------------------|-------------|----------------------------------------------------------------------|
+| `allowTableCreate` | `--allow-table-create`  | `false`     | [tableCreate](http://www.rethinkdb.com/api/javascript/table_create/) |
 
 Allow `tableCreate` queries.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                               |
-|--------------------|-------------------------|-------------|-------------------------------------------------------------------------------------------------------------|
-| `allowTableDrop`   | `--allow-table-drop`    | `false`     |  [http://www.rethinkdb.com/api/javascript/table_drop/](http://www.rethinkdb.com/api/javascript/table_drop/) |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                                     |
+|--------------------|-------------------------|-------------|-------------------------------------------------------------------|
+| `allowTableDrop`   | `--allow-table-drop`    | `false`     | [tableDrop](http://www.rethinkdb.com/api/javascript/table_drop/)  |
 
 Allow `tableDrop` queries.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowIndexes`     | `--allow-indexes`       | `false`     | |               |
+| Module Parameter   | CLI Parameter           | Default     | API Reference |
+|--------------------|-------------------------|-------------|---------------|
+| `allowIndexes`     | `--allow-indexes`       | `false`     |               |
 
 Allow all operations on indexes (`indexCreate`, `indexDrop`, `indexRename`).
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowIndexCreate` | `--allow-index-create`  | `false`     | |               |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                                        |
+|--------------------|-------------------------|-------------|----------------------------------------------------------------------|
+| `allowIndexCreate` | `--allow-index-create`  | `false`     | [indexCreate](http://www.rethinkdb.com/api/javascript/index_create/) |
 
 Allow `indexCreate` queries.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowIndexDrop`   | `--allow-index-drop`    | `false`     | |               |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                                    |
+|--------------------|-------------------------|-------------|------------------------------------------------------------------|
+| `allowIndexDrop`   | `--allow-index-drop`    | `false`     | [indexDrop](http://www.rethinkdb.com/api/javascript/index_drop/) |
 
 Allow `indexDrop` queries.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowIndexRename` | `--allow-index-rename`  | `false`     | |               |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                                        |
+|--------------------|-------------------------|-------------|----------------------------------------------------------------------|
+| `allowIndexRename` | `--allow-index-rename`  | `false`     | [indexRename](http://www.rethinkdb.com/api/javascript/index_rename/) |
 
 Allow `indexRename` queries.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowReconfigure` | `--allow-reconfigure`   | `false`     | |               |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                                       |
+|--------------------|-------------------------|-------------|---------------------------------------------------------------------|
+| `allowReconfigure` | `--allow-reconfigure`   | `false`     | [reconfigure](http://www.rethinkdb.com/api/javascript/reconfigure/) |
 
 Allow `reconfigure` queries.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowRebalance`   | `--allow-rebalance`     | `false`     | |               |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                                        |
+|--------------------|-------------------------|-------------|----------------------------------------------------------------------|
+| `allowRebalance`   | `--allow-rebalance`     | `false`     | [rebalance](http://www.rethinkdb.com/api/javascript/rebalance/)  |
 
 Allow `rebalance` queries.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowHttp`        | `--allow-http`          | `false`     | |               |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                         |
+|--------------------|-------------------------|-------------|-------------------------------------------------------|
+| `allowHttp`        | `--allow-http`          | `false`     | [http](http://www.rethinkdb.com/api/javascript/http/) |
 
 Allow queries with the `http` term.
 
-| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                      |
-|--------------------|-------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| `allowJavascript`  | `--allow-javascript`    | `false`     | |               |
+| Module Parameter   | CLI Parameter           | Default     | API Reference                                      |
+|--------------------|-------------------------|-------------|----------------------------------------------------|
+| `allowJavascript`  | `--allow-javascript`    | `false`     | [js](http://www.rethinkdb.com/api/javascript/js/)  |
 
 Allow queries with the `js` term.
 
