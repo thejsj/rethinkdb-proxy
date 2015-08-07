@@ -39,15 +39,10 @@ describe('Parallel Queries', () => {
               { name: 'Maldives' },
             ])
             .run(conn);
-        })
-        .catch(function (err) {
-          console.log(err);
         });
       })
       .then(() => {
-        console.log(2);
         return new Promise(function (resolve, reject) {
-          console.log('Start Server');
           server = new RethinkDBProxy({
             port: proxyPort,
           });
@@ -65,23 +60,32 @@ describe('Parallel Queries', () => {
 
   it('should handle parallel connections', function (done) {
     //this.timeout(15000);
-    r.connect({ port: proxyPort }).then(function (conn1) {
-      console.log('CONNECT');
+    let query = function (countryName) {
       return r.db(dbName).table(tableName)
-        //.filter(function (row) {
-          //return row('name').eq('Germany');
-        //})
-        .filter({ 'name': 'Germany' })
-        .coerceTo('array')
-        .run(conn1);
-    })
-      .catch(function (err) {
-        console.log('ERR', err);
-      })
-      .then(function (res) {
-        console.log('res', res);
-        done();
+        .filter({ 'name': countryName })
+        .coerceTo('array');
+    };
+    let query1 = query('Germany');
+    let query2 = query('Maldives');
+
+    let arr = (() => {
+      let arr = [];
+      for (let i = 0; i < 5; i += 1)
+        arr.push(i);
+      return arr;
+    }());
+    r.connect({ port: proxyPort }).then(function (conn1) {
+      return Promise.all(
+        []
+          .concat(arr.map(() => query1.run(conn1) ))
+          .concat(arr.map(() => query2.run(conn1) ))
+      )
+      .then((res) => {
+        res.slice(0, 5).forEach(row => row[0].name.should.equal('Germany'));
+        res.slice(5, 10).forEach(row => row[0].name.should.equal('Maldives'));
       });
+    })
+      .nodeify(done);
   });
 
 });
