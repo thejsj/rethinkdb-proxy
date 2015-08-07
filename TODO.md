@@ -3,7 +3,6 @@
 [ ] README
   [x] Wrap allow around code
   [ ] Add api links to docs
-[ ] Test multiple concurrent queries from the same connection
 [ ] Test cursors
 
 ## Future
@@ -15,6 +14,7 @@
 
 ### Done
 
+[x] Test multiple concurrent queries from the same connection
 [x] Test changefeeds
 [x] API
   [x] Better name for allowSysDbAccess
