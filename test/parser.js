@@ -38,6 +38,7 @@ describe('Buffer Parser', () => {
     parser.append(token);
   });
 
+
   it('should correctly parse a single buffer', () => {
     let value = [[1]];
     parseQuery(value, (result) => {
@@ -54,8 +55,26 @@ describe('Buffer Parser', () => {
       result[1].should.eql(value1);
       result[2].should.eql(value2);
     });
+
   });
 
+  it('should correctly parse a parser with `]` inside the bytelength/token`', () => {
+    let value = [1,[51,[[39,[[15,[[14,['rethinkdb_proxy_test']],'entries']],{'name':'Germany'}]],'array']]];
+    parseQuery(value, value, value, (result) => {
+      result[0].should.eql(value);
+      result[1].should.eql(value);
+      result[2].should.eql(value);
+    });
 
+  });
+
+  it('should correctly handle strings with `[]`', () => {
+    let value = [1,[51,[[39,[[15,[[14,['rethinkdb_proxy_test']],'entries']],{'name':'[[[[[[['}]],'array']]];
+    parseQuery(value, value, value, (result) => {
+      result[0].should.eql(value);
+      result[1].should.eql(value);
+      result[2].should.eql(value);
+    });
+  });
 
 });

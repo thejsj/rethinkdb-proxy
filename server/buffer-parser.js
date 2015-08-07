@@ -14,7 +14,6 @@ const BufferParser = class BufferParser {
   }
 
   append (buff) {
-    console.log('Append');
     if (buff !== undefined) {
       this[_queue_] = Buffer.concat([this[_queue_], buff]);
     }
@@ -61,18 +60,29 @@ const BufferParser = class BufferParser {
   }
 
   parseQuery () {
-    console.log('Pasre query');
     let splitString = this[_queue_].toString().split('');
     let openBrackets = 0;
     let foundBracket = false;
+    let double_string_open = false;
+    let single_string_open = false;
     let newQueue = null;
-    console.log(this[_queue_].toString());
-    for (let i = 0; i < splitString.length; i += 1) {
-      if (splitString[i] === '[') {
+    let ch, prevCh;
+    if (splitString.length <= 12) return;
+    for (let i = 12; i < splitString.length; i += 1) {
+      let ch = splitString[i];
+      if (!double_string_open && !single_string_open && ch === '[') {
         openBrackets += 1;
         foundBracket = true;
-      } else if (splitString[i] === ']') {
+      } else if (!double_string_open && !single_string_open && ch === ']') {
         openBrackets -= 1;
+      } else if (ch === '"') {
+        if (!single_string_open && prevCh !== '/') {
+          double_string_open = !double_string_open;
+        }
+      } else if (ch === "'") {
+        if (single_string_open && prevCh !== '/' && !double_string_open) {
+          single_string_open = !single_string_open;
+        }
       }
       if (openBrackets === 0 && foundBracket) {
         let token = this[_queue_].slice(0, 8).readUInt32LE();
@@ -86,6 +96,7 @@ const BufferParser = class BufferParser {
         }
         break;
       }
+      prevCh = ch;
     }
     if (newQueue !== null && newQueue.length > 0) {
       this.append(newQueue);
