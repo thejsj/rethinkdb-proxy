@@ -3,10 +3,11 @@
 [ ] README
   [x] Wrap allow around code
   [ ] Add api links to docs
-[ ] Add logging
-[ ] Add error handling for non-rethinkdb driver connections
-[ ] Keep server running on error
-[ ] It should handle queries that throw errors
+[ ] Errors 
+  [ ] Add error handling for non-rethinkdb driver connections
+  [ ] Keep server running on error
+  [ ] It should handle queries that throw errors
+  [ ] Fix `ECONNRESET` bugs
 
 ## Future
 
@@ -14,6 +15,8 @@
   [ ] Replace `net` library with websockets
 [ ] Authentication
 [ ] Convert queries back to strings. Re-build AST.
+[ ] Save options in RethinkDB instead of passing them as flags
+[ ] Add logging
 
 ### Done
 
