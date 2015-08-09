@@ -46,6 +46,14 @@ describe('Normal Queries', () => {
        .nodeify(done);
     });
 
+    it('should handle group queries', (done) => {
+      assertQuery(
+        r.expr([{'v': 1}, {'v': 2}, {'v' : 2}, {'v' : 4}])
+        .group('v').count().ungroup()
+      )
+        .nodeify(done);
+    });
+
   });
 
   describe('Write Queries', () => {
