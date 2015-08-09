@@ -90,9 +90,18 @@ export default class RethinkDBProxy {
       serverSocket.write(token);
     });
 
+    parser.on('error', (token) => {
+      let response = {
+        t: protoDef.Response.ResponseType.CLIENT_ERROR,
+        b: [],
+        n: [],
+        r: ['Proxy Error: Could not parse query correctly.']
+      };
+      sendResponseToClient(response, token);
+    });
+
     parser.on('query', (query, token) => {
       let termsFound = findTerms(this.opts, this.opts.unallowedTerms, query);
-
       if (termsFound.length > 0) {
         // This shouldn't throw an error. It should
         // send the error through the TCP connection
@@ -112,6 +121,7 @@ export default class RethinkDBProxy {
       }
       sendResponseToServer(query, token);
     });
+
     clientSocket.on('data', function (data) {
       return parser.append(data);
     });
