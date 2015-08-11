@@ -78,7 +78,7 @@ const BufferParser = class BufferParser {
     let token = this[_queue_].slice(0, 8).readUInt32LE();
     let byteLength = this[_queue_].slice(8, 12).readUInt32LE();
     let query = this[_queue_].slice(12, byteLength + 12);
-    newQueue = this[_queue_].slice(byteLength + 12 + 1);
+    newQueue = this[_queue_].slice(byteLength + 12);
     try {
       // Simplest way to handle check if input is valid JSON
       let json = JSON.parse(query.toString());
@@ -86,7 +86,6 @@ const BufferParser = class BufferParser {
     } catch (err) {
       // I think the problem has something to do with the fact that I'm adding a
       // comma somehwere ....
-      console.log('JSON PARSE ERROR', err);
       this.fireEvent('error', token);
     }
     this[_queue_] = new Buffer(0);
