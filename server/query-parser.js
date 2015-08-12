@@ -122,13 +122,13 @@ let checkForDatabaseAccess =  function (opts, connectionDbName, command, args, q
   return [];
 };
 
-export const findTerms = (opts, terms, query) => {
+export const findTermsOrErrors = (opts, terms, query) => {
   let termsFound = [], connectionDbName;
 
-  const __findTerms = (query) => {
+  const __findTermsOrErrors = (query) => {
     if (!isRQLQuery(query)) {
       if (Array.isArray(query)) {
-        return _.flatten(query.map(__findTerms)).filter(x => x);
+        return _.flatten(query.map(__findTermsOrErrors)).filter(x => x);
       }
       return [];
     }
@@ -161,16 +161,16 @@ export const findTerms = (opts, terms, query) => {
       if(protoDef.Term.TermType[termName] === command) return termName;
     }
     if (command === protoDef.Term.TermType.MAKE_ARRAY) {
-      return _.flatten(query[1].map(__findTerms)).filter(x => x);
+      return _.flatten(query[1].map(__findTermsOrErrors)).filter(x => x);
     }
-    return _.flatten(query.map(__findTerms)).filter(x => x);
+    return _.flatten(query.map(__findTermsOrErrors)).filter(x => x);
   };
 
   if (typeof query[2] === 'object' && query[2].db !== undefined) {
     connectionDbName = query[2].db[1][0];
-    termsFound = termsFound.concat(__findTerms(query[2].db));
+    termsFound = termsFound.concat(__findTermsOrErrors(query[2].db));
   }
-  return termsFound.concat(__findTerms(query));
+  return termsFound.concat(__findTermsOrErrors(query));
 };
 
 
