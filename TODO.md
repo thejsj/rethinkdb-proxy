@@ -1,8 +1,8 @@
 # TODO
 
-[ ] README
+[x] README
   [x] Wrap allow around code
-  [ ] Add api links to docs
+  [x] Add api links to docs
 [ ] Errors 
   [ ] Add error handling for non-rethinkdb driver connections
   [ ] Keep server running on error

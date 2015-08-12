@@ -2,7 +2,7 @@
 import net from 'net';
 import protoDef from 'rethinkdb/proto-def';
 import BufferParser from './buffer-parser';
-import { findTerms } from './query-parser';
+import { findTermsOrErrors } from './query-parser';
 import optionsParser from './options-parser';
 
 export default class RethinkDBProxy {
@@ -101,7 +101,7 @@ export default class RethinkDBProxy {
     });
 
     parser.on('query', (query, token) => {
-      let termsFound = findTerms(this.opts, this.opts.unallowedTerms, query);
+      let termsFound = findTermsOrErrors(this.opts, this.opts.unallowedTerms, query);
       if (termsFound.length > 0) {
         // This shouldn't throw an error. It should
         // send the error through the TCP connection
@@ -117,9 +117,9 @@ export default class RethinkDBProxy {
           n: [],
           r: [errorMessage]
         };
-        sendResponseToClient(response, token);
+        return sendResponseToClient(response, token);
       }
-      sendResponseToServer(query, token);
+      return sendResponseToServer(query, token);
     });
 
     clientSocket.on('data', function (data) {
