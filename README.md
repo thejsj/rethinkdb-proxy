@@ -1,5 +1,8 @@
 # RethinkDB Proxy
 
+[![Build Status](https://travis-ci.org/thejsj/rethinkdb-proxy.svg?branch=master)](https://travis-ci.org/thejsj/rethinkdb-proxy)
+[![npm version](https://badge.fury.io/js/rethinkdb-proxy.svg)](http://badge.fury.io/js/rethinkdb-proxy)
+
 *Reverse proxy for RethinkDB*
 
 Make your RethinkDB publicly accessible through limiting what kind of queries can be executed on your RethinkDB database.
