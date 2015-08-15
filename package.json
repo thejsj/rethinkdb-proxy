@@ -14,7 +14,7 @@
     "dev": "./node_modules/nodemon/bin/nodemon.js --exec babel-node -- ./index.js",
     "start": "./node_modules/babel/bin/babel-node.js ./index.js"
   },
-  "author": "",
+  "author": "thejsj",
   "license": "MIT",
   "devDependencies": {
     "bluebird": "^2.9.34",
