@@ -1,4 +1,5 @@
 /*jshint esnext:true */
+require('babel/polyfill');
 import net from 'net';
 import protoDef from 'rethinkdb/proto-def';
 import BufferParser from './buffer-parser';

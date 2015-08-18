@@ -1,4 +1,4 @@
-import BufferParser from '../server/buffer-parser';
+import BufferParser from '../src/buffer-parser';
 import protoDef from '../node_modules/rethinkdb/proto-def'
 import 'should';
 
