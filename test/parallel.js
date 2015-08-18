@@ -1,10 +1,10 @@
 /*jshint esnext:true */
 import r from 'rethinkdb';
 import Promise from 'bluebird';
-import RethinkDBProxy from '../server';
+import RethinkDBProxy from '../src';
 import should from 'should';
 import { makeExecuteQuery, makeExecuteProxyQuery, makeAssertQuery, makeCreateDatabase, makeDropDatabase } from './utils';
-import protoDef from '../driver/proto-def';
+import protoDef from '../node_modules/rethinkdb/proto-def';
 
 let proxyPort = 8125;
 let dbName = 'rethinkdb_proxy_test';

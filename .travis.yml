@@ -14,5 +14,8 @@ before_install:
   - sudo apt-get update -q
   - sudo apt-get -y --force-yes install rethinkdb
 
+notifications:
+  email: false
+
 before_script:
     - rethinkdb --daemon

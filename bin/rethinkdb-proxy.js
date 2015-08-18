@@ -1,8 +1,7 @@
 #! /usr/bin/env node
 var cli = require('cli').enable('status');
 var taser = require('taser');
-require('babel/register');
-var RethinkDBProxy = require('../server/');
+var RethinkDBProxy = require('../lib/');
 
 cli.parse({
   'port':               [false, 'Port in which to listen for driver connections', 'number', null],
