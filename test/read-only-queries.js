@@ -18,7 +18,7 @@ let createDatabase = makeCreateDatabase(dbName, tableName);
 let dropDatabase = makeDropDatabase(dbName);
 let throwError = function (res) { throw new Error(); };
 let expectError = function (errorName, errorMessageMatch, err) {
-  console.log('Err.msg', errorMessageMatch);
+  console.log('Err.msg', errorMessageMatch, err.msg);
   if (errorMessageMatch !== null) err.msg.should.match(errorMessageMatch);
   if (errorName !== null) errorName.should.equal(err.name);
   (err instanceof Error).should.equal(true);
