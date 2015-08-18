@@ -2,7 +2,7 @@
 1 verbose cli [ '/Users/jorgesilvajetter/.nvm/versions/io.js/v2.1.0/bin/iojs',
 1 verbose cli   '/Users/jorgesilvajetter/.nvm/versions/io.js/v2.1.0/bin/npm',
 1 verbose cli   'install',
-1 verbose cli   'https://github.com/thejsj/rethinkdb-proxy/tarball/master/' ]
+1 verbose cli   'https://github.com/thejsj/rethinkdb-proxy/tarball/npm/' ]
 2 info using npm@2.10.1
 3 info using node@v2.1.0
 4 verbose install initial load of /Users/jorgesilvajetter/Sites/2015/rethinkdb-proxy/package.json
@@ -21,34 +21,34 @@
 17 info package.json taser@1.0.0 No repository field.
 18 info package.json rethinkdb@2.1.0 No license field.
 19 verbose readDependencies loading dependencies from /Users/jorgesilvajetter/Sites/2015/rethinkdb-proxy/package.json
-20 silly cache add args [ 'https://github.com/thejsj/rethinkdb-proxy/tarball/master/',
+20 silly cache add args [ 'https://github.com/thejsj/rethinkdb-proxy/tarball/npm/',
 20 silly cache add   null ]
-21 verbose cache add spec https://github.com/thejsj/rethinkdb-proxy/tarball/master/
-22 silly cache add parsed spec { raw: 'https://github.com/thejsj/rethinkdb-proxy/tarball/master/',
+21 verbose cache add spec https://github.com/thejsj/rethinkdb-proxy/tarball/npm/
+22 silly cache add parsed spec { raw: 'https://github.com/thejsj/rethinkdb-proxy/tarball/npm/',
 22 silly cache add   scope: null,
 22 silly cache add   name: null,
-22 silly cache add   rawSpec: 'https://github.com/thejsj/rethinkdb-proxy/tarball/master/',
-22 silly cache add   spec: 'https://github.com/thejsj/rethinkdb-proxy/tarball/master/',
+22 silly cache add   rawSpec: 'https://github.com/thejsj/rethinkdb-proxy/tarball/npm/',
+22 silly cache add   spec: 'https://github.com/thejsj/rethinkdb-proxy/tarball/npm/',
 22 silly cache add   type: 'remote' }
-23 silly mapToRegistry name https://github.com/thejsj/rethinkdb-proxy/tarball/master/
+23 silly mapToRegistry name https://github.com/thejsj/rethinkdb-proxy/tarball/npm/
 24 silly mapToRegistry using default registry
 25 silly mapToRegistry registry https://registry.npmjs.org/
-26 silly mapToRegistry uri https://github.com/thejsj/rethinkdb-proxy/tarball/master/
-27 verbose addRemoteTarball https://github.com/thejsj/rethinkdb-proxy/tarball/master/ not in flight; adding
-28 verbose addRemoteTarball [ 'https://github.com/thejsj/rethinkdb-proxy/tarball/master/',
+26 silly mapToRegistry uri https://github.com/thejsj/rethinkdb-proxy/tarball/npm/
+27 verbose addRemoteTarball https://github.com/thejsj/rethinkdb-proxy/tarball/npm/ not in flight; adding
+28 verbose addRemoteTarball [ 'https://github.com/thejsj/rethinkdb-proxy/tarball/npm/',
 28 verbose addRemoteTarball   null ]
-29 info retry fetch attempt 1 at 09:16:10
-30 info attempt registry request try #1 at 09:16:10
-31 http fetch GET https://github.com/thejsj/rethinkdb-proxy/tarball/master/
-32 verbose request id c4406c7a83364382
-33 http fetch 200 https://github.com/thejsj/rethinkdb-proxy/tarball/master/
-34 silly fetchAndShaCheck shasum b1d7dadc7e7726e5b76821263ed2f672a71ae969
-35 verbose addTmpTarball /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-8997-5c79125a/github.com/thejsj/rethinkdb-proxy/tarball/master not in flight; adding
-36 verbose addTmpTarball validating metadata from /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-8997-5c79125a/github.com/thejsj/rethinkdb-proxy/tarball/master
-37 verbose tar unpack /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-8997-5c79125a/github.com/thejsj/rethinkdb-proxy/tarball/master
-38 verbose tar unpacking to /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-8997-5c79125a/unpack-59a2416e6d95
-39 silly gentlyRm /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-8997-5c79125a/unpack-59a2416e6d95 is being purged
-40 verbose gentlyRm don't care about contents; nuking /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-8997-5c79125a/unpack-59a2416e6d95
+29 info retry fetch attempt 1 at 09:21:28
+30 info attempt registry request try #1 at 09:21:28
+31 http fetch GET https://github.com/thejsj/rethinkdb-proxy/tarball/npm/
+32 verbose request id 75770936814bf22e
+33 http fetch 200 https://github.com/thejsj/rethinkdb-proxy/tarball/npm/
+34 silly fetchAndShaCheck shasum c34455b6af78d7e995395172647abe7b4ed6a54b
+35 verbose addTmpTarball /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-9270-e63e50d9/github.com/thejsj/rethinkdb-proxy/tarball/npm not in flight; adding
+36 verbose addTmpTarball validating metadata from /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-9270-e63e50d9/github.com/thejsj/rethinkdb-proxy/tarball/npm
+37 verbose tar unpack /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-9270-e63e50d9/github.com/thejsj/rethinkdb-proxy/tarball/npm
+38 verbose tar unpacking to /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-9270-e63e50d9/unpack-5c4f023afb43
+39 silly gentlyRm /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-9270-e63e50d9/unpack-5c4f023afb43 is being purged
+40 verbose gentlyRm don't care about contents; nuking /var/folders/v5/dc22lmcj70v81kck1nrf8m_r0000gn/T/npm-9270-e63e50d9/unpack-5c4f023afb43
 41 silly gunzTarPerm modes [ '755', '644' ]
 42 silly gunzTarPerm extractEntry
 43 silly gunzTarPerm modified mode [ '', 509, 493 ]
@@ -66,8 +66,8 @@
 55 silly gunzTarPerm modified mode [ 'bin/', 509, 493 ]
 56 silly gunzTarPerm extractEntry bin/rethinkdb-proxy.js
 57 silly gunzTarPerm modified mode [ 'bin/rethinkdb-proxy.js', 509, 493 ]
-58 silly gunzTarPerm extractEntry index.js
-59 silly gunzTarPerm modified mode [ 'index.js', 436, 420 ]
+58 silly gunzTarPerm extractEntry npm-debug.log
+59 silly gunzTarPerm modified mode [ 'npm-debug.log', 436, 420 ]
 60 silly gunzTarPerm extractEntry package.json
 61 silly gunzTarPerm modified mode [ 'package.json', 436, 420 ]
 62 silly gunzTarPerm extractEntry src/
@@ -118,7 +118,7 @@
 99 silly install resolved        dev: './node_modules/nodemon/bin/nodemon.js --exec babel-node -- ./index.js',
 99 silly install resolved        start: 'node ./lib/index.js',
 99 silly install resolved        compile: './node_modules/babel/bin/babel.js -d lib src',
-99 silly install resolved        postinstall: 'npm run compile' },
+99 silly install resolved        postinstall: 'ls -R && npm run compile' },
 99 silly install resolved     author: { name: 'thejsj' },
 99 silly install resolved     license: 'MIT',
 99 silly install resolved     devDependencies:
@@ -135,9 +135,9 @@
 99 silly install resolved     readme: '# RethinkDB Proxy\n\n[![Build Status](https://travis-ci.org/thejsj/rethinkdb-proxy.svg?branch=master)](https://travis-ci.org/thejsj/rethinkdb-proxy)\n[![npm version](https://badge.fury.io/js/rethinkdb-proxy.svg)](http://badge.fury.io/js/rethinkdb-proxy)\n\n*Reverse proxy for RethinkDB*\n\nMake your RethinkDB publicly accessible through limiting what kind of queries can be executed on your RethinkDB database.\n\n## Introduction by Example\n\nFirst, start the proxy.\n\n```bash\n$ rethinkdb-proxy --port 8125\n```\nUsing the proxy, getting all users in the `users` table is allowed.\n\n```javascript\nr.connect({ port: 8125 }).then((conn) => {\n  r.table(\'users\').coerceTo(\'array\').run(conn)\n    .then((results) => {\n      // We have some results!\n      console.log(results); // [{ name: \'jorge\' }, ... ]\n    });\n});\n```\n\nBut deleting the users **is not**:\n\n```javascript\nimport rethinkDBProxy from \'rethinkdb-proxy\';\nrethinkDBProxy({ port: 8125 });\n\nr.connect({ port: 8125 }).then((conn) => {\n  r.table(\'users\').delete(\'array\').run(conn)\n    .catch((err) => {\n      // We get an error!\n      console.log(err); // RqlClientError: Cannot execute query. "DELETE" query not allowed\n    });\n});\n```\n## Running rethinkdb-proxy\n\n#### CLI\n\nrethinkdb-proxy comes with a CLI out-of-the box:\n\n```\nrethinkdb-proxy --port 8125 \n```\n\n#### Module\n\nYou can also import rethinkdb-proxy into Node.js:\n\n```\nimport rethinkDBProxy from \'rethinkdb-proxy\';\nrethinkDBProxy({ port: 8125, allowInsert: true });\n```\n\n## Options\n\n - [`port`](#port)\n - [`rdbHost`](#rdbHost)\n - [`rdbPort`](#rdbPort)\n - [`dbs`](#dbs)\n - [`allowSysDbAccess`](#allowSysDbAccess)\n - [`tables`](#tables)\n - [`allowWrites`](#allowWrites)\n - [`allowInsert`](#allowInsert)\n - [`allowUpdate`](#allowUpdate)\n - [`allowDelete`](#allowDelete)\n - [`allowReplace`](#allowReplace)\n - [`allowDbCreate`](#allowDbCreate)\n - [`allowDbDrop`](#allowDbDrop)\n - [`allowTableCreate`](#allowTableCreate)\n - [`allowTableDrop`](#allowTableDrop)\n - [`allowIndexes`](#allowIndexes)\n - [`allowIndexCreate`](#allowIndexCreate)\n - [`allowIndexDrop`](#allowIndexDrop)\n - [`allowIndexRename`](#allowIndexRename)\n - [`allowReconfigure`](#allowReconfigure)\n - [`allowRebalance`](#allowRebalance)\n - [`allowHttp`](#allowHttp)\n - [`allowJavascript`](#allowJavascript)\n\n### Port <a name=\'port\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference |\n|--------------------|-------------------------|-------------|---------------|\n| `port`             | `--port`                | `8125`      |               |\n\nPort in which to listen for driver connections. You should point your driver to this port.\n\n### RethinkDB Host <a name=\'rdbHost\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                        |\n|--------------------|-------------------------|-------------|-------------------------------------------------------------|\n| `rdbHost`          | `--rdb-host`            | `localhost`     | [connect](http://www.rethinkdb.com/api/javascript/connect/) |\n\nHost in which RethinkDB is running.\n\n### RethinkDB Port <a name=\'rdbPort\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                                                                        |\n|--------------------|-------------------------|-------------|--------------------------------------------------------------|\n| `rdbPort`          | `--rdb-host`            | `localhost` | [connect](http://www.rethinkdb.com/api/javascript/connect/) |\n\nHost in which RethinkDB is running.\n\n### Databases <a name=\'dbs\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference |\n|--------------------|-------------------------|-------------|---------------|\n| `dbs`              | `--dbs`                 | `[ ]`       |               |\n\nDatabase to allow access to. By default, all database are allowed except `rethinkdb`.\n\n### Allow System Database Access <a name=\'allowSysDbAccess\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference |\n|--------------------|-------------------------|-------------|---------------|\n| `allowSysDbAccess` | `--allow-sys-db-access` | `false`     |               |\n\nAllow access to the `rethinkdb` database. This is not allowed by default, because\naccess to this database allows to delete all other data.\n\n### Tables <a name=\'tables\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference |\n|--------------------|-------------------------|-------------|---------------|\n| `tables`           | `--tables`              | `[ ]`       |               |\n\nTables to allow access to. Tables must include their database `db.table`.\n\n### Allow Writes <a name=\'allowWrites\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference |\n|--------------------|-------------------------|-------------|---------------|\n| `allowWrites`      | `--allow-writes`        | `false`     |               |\n\nAllow all operations that write to the database (`insert`, `update`, `delete`).\n\n### Allow `insert` <a name=\'allowInsert\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                             |\n|--------------------|-------------------------|-------------|-----------------------------------------------------------|\n| `allowInsert`      | `--allow-insert`        | `false`     | [insert](http://www.rethinkdb.com/api/javascript/insert/) |\n\nAllow `insert` queries.\n\n### Allow `update` <a name=\'allowUpdate\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                             |\n|--------------------|-------------------------|-------------|-----------------------------------------------------------|\n| `allowUpdate`      | `--allow-update`        | `false`     | [update](http://www.rethinkdb.com/api/javascript/update/) |\n\nAllow `update` queries.\n\n### Allow `delete` <a name=\'allowDelete\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                             |\n|--------------------|-------------------------|-------------|-----------------------------------------------------------|\n| `allowDelete`      | `--allow-delete`        | `false`     | [delete](http://www.rethinkdb.com/api/javascript/delete/) |\n\nAllow `delete` queries.\n\n### Allow `replace` <a name=\'allowReplace\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                              |\n|--------------------|-------------------------|-------------|------------------------------------------------------------|\n| `allowReplace`     | `--allow-replace`       | `false`     | [replace](http://www.rethinkdb.com/api/javascript/delete/) |\n\nAllow `replace` queries.\n\n### Allow `dbCreate` <a name=\'allowDbCreate\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                                  |\n|--------------------|-------------------------|-------------|----------------------------------------------------------------|\n| `allowDbCreate`    | `--allow-db-create`     | `false`     | [dbCreate](http://www.rethinkdb.com/api/javascript/db_create/) |\n\nAllow `dbCreate` queries\n\n### Allow `dbDrop` <a name=\'allowDbDrop\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                              |\n|--------------------|-------------------------|-------------|------------------------------------------------------------|\n| `allowDbDrop`      | `--allow-db-drop`       | `false`     | [dbDrop](http://www.rethinkdb.com/api/javascript/db_drop/) |\n\nAllow `dbDrop` queries\n\n### Allow `tableCreate` <a name=\'allowTableCreate\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                                        |\n|--------------------|-------------------------|-------------|----------------------------------------------------------------------|\n| `allowTableCreate` | `--allow-table-create`  | `false`     | [tableCreate](http://www.rethinkdb.com/api/javascript/table_create/) |\n\nAllow `tableCreate` queries.\n\n### Allow `tableDrop` <a name=\'allowTableDrop\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                                     |\n|--------------------|-------------------------|-------------|-------------------------------------------------------------------|\n| `allowTableDrop`   | `--allow-table-drop`    | `false`     | [tableDrop](http://www.rethinkdb.com/api/javascript/table_drop/)  |\n\nAllow `tableDrop` queries.\n\n### Allow Indexes <a name=\'allowIndexes\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference |\n|--------------------|-------------------------|-------------|---------------|\n| `allowIndexes`     | `--allow-indexes`       | `false`     |               |\n\nAllow all operations on indexes (`indexCreate`, `indexDrop`, `indexRename`).\n\n### Allow `indexCreate` <a name=\'allowIndexeCreate\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                                        |\n|--------------------|-------------------------|-------------|----------------------------------------------------------------------|\n| `allowIndexCreate` | `--allow-index-create`  | `false`     | [indexCreate](http://www.rethinkdb.com/api/javascript/index_create/) |\n\nAllow `indexCreate` queries.\n\n### Allow `indexDrop` <a name=\'allowIndexDrop\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                                    |\n|--------------------|-------------------------|-------------|------------------------------------------------------------------|\n| `allowIndexDrop`   | `--allow-index-drop`    | `false`     | [indexDrop](http://www.rethinkdb.com/api/javascript/index_drop/) |\n\nAllow `indexDrop` queries.\n\n### Allow `indexRename` <a name=\'allowIndexRename\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                                        |\n|--------------------|-------------------------|-------------|----------------------------------------------------------------------|\n| `allowIndexRename` | `--allow-index-rename`  | `false`     | [indexRename](http://www.rethinkdb.com/api/javascript/index_rename/) |\n\nAllow `indexRename` queries.\n\n### Allow `reconfigure` <a name=\'allowReconfigure\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                                       |\n|--------------------|-------------------------|-------------|---------------------------------------------------------------------|\n| `allowReconfigure` | `--allow-reconfigure`   | `false`     | [reconfigure](http://www.rethinkdb.com/api/javascript/reconfigure/) |\n\nAllow `reconfigure` queries.\n\n### Allow `rebalance` <a name=\'allowRebalance\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                                        |\n|--------------------|-------------------------|-------------|----------------------------------------------------------------------|\n| `allowRebalance`   | `--allow-rebalance`     | `false`     | [rebalance](http://www.rethinkdb.com/api/javascript/rebalance/)  |\n\nAllow `rebalance` queries.\n\n### Allow `http` <a name=\'allowHttp\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                         |\n|--------------------|-------------------------|-------------|-------------------------------------------------------|\n| `allowHttp`        | `--allow-http`          | `false`     | [http](http://www.rethinkdb.com/api/javascript/http/) |\n\nAllow queries with the `http` term.\n\n### Allow `js` <a name=\'allowJavascript\'></a>\n\n| Module Parameter   | CLI Parameter           | Default     | API Reference                                      |\n|--------------------|-------------------------|-------------|----------------------------------------------------|\n| `allowJavascript`  | `--allow-javascript`    | `false`     | [js](http://www.rethinkdb.com/api/javascript/js/)  |\n\nAllow queries with the `js` term.\n\n',
 99 silly install resolved     readmeFilename: 'README.md',
 99 silly install resolved     _id: 'rethinkdb-proxy@0.0.2',
-99 silly install resolved     _shasum: 'b1d7dadc7e7726e5b76821263ed2f672a71ae969',
-99 silly install resolved     _resolved: 'https://github.com/thejsj/rethinkdb-proxy/tarball/master/',
-99 silly install resolved     _from: 'https://github.com/thejsj/rethinkdb-proxy/tarball/master/' } ]
+99 silly install resolved     _shasum: 'c34455b6af78d7e995395172647abe7b4ed6a54b',
+99 silly install resolved     _resolved: 'https://github.com/thejsj/rethinkdb-proxy/tarball/npm/',
+99 silly install resolved     _from: 'https://github.com/thejsj/rethinkdb-proxy/tarball/npm/' } ]
 100 info install rethinkdb-proxy@0.0.2 into /Users/jorgesilvajetter/Sites/2015/rethinkdb-proxy
 101 info installOne rethinkdb-proxy@0.0.2
 102 verbose installOne of rethinkdb-proxy to /Users/jorgesilvajetter/Sites/2015/rethinkdb-proxy not in flight; installing
@@ -167,8 +167,8 @@
 126 silly gunzTarPerm modified mode [ 'bin/', 509, 493 ]
 127 silly gunzTarPerm extractEntry bin/rethinkdb-proxy.js
 128 silly gunzTarPerm modified mode [ 'bin/rethinkdb-proxy.js', 509, 493 ]
-129 silly gunzTarPerm extractEntry index.js
-130 silly gunzTarPerm modified mode [ 'index.js', 436, 420 ]
+129 silly gunzTarPerm extractEntry npm-debug.log
+130 silly gunzTarPerm modified mode [ 'npm-debug.log', 436, 420 ]
 131 silly gunzTarPerm extractEntry package.json
 132 silly gunzTarPerm modified mode [ 'package.json', 436, 420 ]
 133 silly gunzTarPerm extractEntry src/
@@ -227,7 +227,7 @@
 184 verbose unsafe-perm in lifecycle true
 185 info rethinkdb-proxy@0.0.2 Failed to exec postinstall script
 186 verbose unlock done using /Users/jorgesilvajetter/.npm/_locks/rethinkdb-proxy-1c64d172e5df8b1f.lock for /Users/jorgesilvajetter/Sites/2015/rethinkdb-proxy/node_modules/rethinkdb-proxy
-187 verbose stack Error: rethinkdb-proxy@0.0.2 postinstall: `npm run compile`
+187 verbose stack Error: rethinkdb-proxy@0.0.2 postinstall: `ls -R && npm run compile`
 187 verbose stack Exit status 1
 187 verbose stack     at EventEmitter.<anonymous> (/Users/jorgesilvajetter/.nvm/versions/io.js/v2.1.0/lib/node_modules/npm/lib/utils/lifecycle.js:213:16)
 187 verbose stack     at emitTwo (events.js:87:13)
@@ -240,17 +240,17 @@
 188 verbose pkgid rethinkdb-proxy@0.0.2
 189 verbose cwd /Users/jorgesilvajetter/Sites/2015/rethinkdb-proxy
 190 error Darwin 14.1.0
-191 error argv "/Users/jorgesilvajetter/.nvm/versions/io.js/v2.1.0/bin/iojs" "/Users/jorgesilvajetter/.nvm/versions/io.js/v2.1.0/bin/npm" "install" "https://github.com/thejsj/rethinkdb-proxy/tarball/master/"
+191 error argv "/Users/jorgesilvajetter/.nvm/versions/io.js/v2.1.0/bin/iojs" "/Users/jorgesilvajetter/.nvm/versions/io.js/v2.1.0/bin/npm" "install" "https://github.com/thejsj/rethinkdb-proxy/tarball/npm/"
 192 error node v2.1.0
 193 error npm  v2.10.1
 194 error code ELIFECYCLE
-195 error rethinkdb-proxy@0.0.2 postinstall: `npm run compile`
+195 error rethinkdb-proxy@0.0.2 postinstall: `ls -R && npm run compile`
 195 error Exit status 1
-196 error Failed at the rethinkdb-proxy@0.0.2 postinstall script 'npm run compile'.
+196 error Failed at the rethinkdb-proxy@0.0.2 postinstall script 'ls -R && npm run compile'.
 196 error This is most likely a problem with the rethinkdb-proxy package,
 196 error not with npm itself.
 196 error Tell the author that this fails on your system:
-196 error     npm run compile
+196 error     ls -R && npm run compile
 196 error You can get their info via:
 196 error     npm owner ls rethinkdb-proxy
 196 error There is likely additional logging output above.
