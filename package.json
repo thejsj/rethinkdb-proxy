@@ -1,6 +1,6 @@
 {
   "name": "rethinkdb-proxy",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Reverse Proxy for RethinkDB. Make your RethinkDB publicly accessible through limiting what kind of queries can be executed on your RethinkDB database.",
   "main": "lib/index.js",
   "directories": {
@@ -14,7 +14,7 @@
     "dev": "./node_modules/nodemon/bin/nodemon.js --exec babel-node -- ./index.js",
     "start": "node ./lib/index.js",
     "compile": "./node_modules/babel/bin/babel.js -d lib src",
-    "postinstall": "npm run compile"
+    "prepublish": "npm run compile"
   },
   "author": "thejsj",
   "license": "MIT",
