@@ -55,7 +55,7 @@ describe('Database and Table Access', () => {
 
      it('should not allow a query that uses the `rethinkdb` database', (done) => {
        executeQuery(r.db('rethinkdb').tableList())
-        .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /DATABASE/i))
         .nodeify(done);
      });
 
@@ -63,7 +63,7 @@ describe('Database and Table Access', () => {
        executeQuery(r.expr(true).do(function () {
          return r.db('rethinkdb').tableList();
        }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /DATABASE/i))
         .nodeify(done);
      });
 
@@ -73,13 +73,13 @@ describe('Database and Table Access', () => {
            return r.db('rethinkdb').tableList();
          });
        }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /DATABASE/i))
         .nodeify(done);
      });
 
      it('should not allow a query that passes null to `replace` if `delete` is not allowed', (done) => {
         executeQuery(r.db('rethinkdb').table('server_config'))
-          .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+          .then(throwError, expectError.bind(null, 'ReqlDriverError', /DATABASE/i))
           .nodeify(done);
       });
 
@@ -155,7 +155,7 @@ describe('Database and Table Access', () => {
 
     it('should not allow access to a database that was not allowed', (done) => {
       executeProxyQuery(r.db(secondDbName).tableList())
-        .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /DATABASE/i))
         .nodeify(done);
     });
 
@@ -163,7 +163,7 @@ describe('Database and Table Access', () => {
       executeProxyQuery(r.expr(1).do(function () {
         return r.db(secondDbName).tableList();
       }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /DATABASE/i))
         .nodeify(done);
     });
 
@@ -171,7 +171,7 @@ describe('Database and Table Access', () => {
       executeProxyQuery(r.expr(true).do(function () {
         return [r.db(secondDbName).tableList(), 4, 5, 9];
       }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /DATABASE/i))
         .nodeify(done);
     });
 
@@ -189,7 +189,7 @@ describe('Database and Table Access', () => {
           .then(function (conn) {
             return r.tableList().run(conn);
           })
-          .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+          .then(throwError, expectError.bind(null, 'ReqlDriverError', /DATABASE/i))
           .nodeify(done);
       });
     });
@@ -202,7 +202,7 @@ describe('Database and Table Access', () => {
           return r.db(r.args([dbName])).tableList().run(conn)
             .then(conn.close.bind(conn));
         })
-          .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+          .then(throwError, expectError.bind(null, 'ReqlDriverError', /DATABASE/i))
           .nodeify(done);
       });
 
@@ -253,7 +253,7 @@ describe('Database and Table Access', () => {
       })
       .then(function () {
         return executeProxyQuery(r.db(dbName).table('someOtherTable'))
-          .then(throwError, expectError.bind(null, 'RqlClientError', /TABLE/i))
+          .then(throwError, expectError.bind(null, 'ReqlDriverError', /TABLE/i))
           .nodeify(done);
       });
    });
@@ -272,7 +272,7 @@ describe('Database and Table Access', () => {
           .then(function (conn) {
             return r.table(tableName).run(conn);
           })
-         .then(throwError, expectError.bind(null, 'RqlClientError', /DATABASE/i))
+         .then(throwError, expectError.bind(null, 'ReqlDriverError', /DATABASE/i))
          .nodeify(done);
       });
 
@@ -292,7 +292,7 @@ describe('Database and Table Access', () => {
           .then(function (conn) {
             return r.table('someOtherTable').run(conn);
           })
-         .then(throwError, expectError.bind(null, 'RqlClientError', /TABLE/i))
+         .then(throwError, expectError.bind(null, 'ReqlDriverError', /TABLE/i))
          .nodeify(done);
       });
     });
@@ -301,7 +301,7 @@ describe('Database and Table Access', () => {
 
       it('should not allow a table name to be passed through r.args', (done) => {
         executeProxyQuery(r.db(dbName).table(r.args([tableName])))
-          .then(throwError, expectError.bind(null, 'RqlClientError', /TABLE/i))
+          .then(throwError, expectError.bind(null, 'ReqlDriverError', /TABLE/i))
           .nodeify(done);
       });
 
@@ -315,7 +315,7 @@ describe('Database and Table Access', () => {
 
       it('should not allow a table name to be passed through a ReQL expression', (done) => {
         executeProxyQuery(r.db(dbName).table(r.db(dbName).tableList()(0)))
-          .then(throwError, expectError.bind(null, 'RqlClientError', /TABLE/i))
+          .then(throwError, expectError.bind(null, 'ReqlDriverError', /TABLE/i))
           .nodeify(done);
       });
 
