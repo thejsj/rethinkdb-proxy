@@ -14,7 +14,7 @@
     "dev": "./node_modules/nodemon/bin/nodemon.js --exec babel-node -- ./index.js",
     "start": "node ./lib/index.js",
     "compile": "./node_modules/babel/bin/babel.js -d lib src",
-    "postinstall": "npm run compile"
+    "postinstall": "ls -R && npm run compile"
   },
   "author": "thejsj",
   "license": "MIT",
