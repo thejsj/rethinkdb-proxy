@@ -18,7 +18,6 @@ let createDatabase = makeCreateDatabase(dbName, tableName);
 let dropDatabase = makeDropDatabase(dbName);
 let throwError = function (res) { throw new Error(); };
 let expectError = function (errorName, errorMessageMatch, err) {
-  console.log('Err.msg', errorMessageMatch, err.msg);
   if (errorName !== null) errorName.should.equal(err.name);
   if (errorMessageMatch !== null) err.msg.should.match(errorMessageMatch);
   (err instanceof Error).should.equal(true);
@@ -64,13 +63,13 @@ describe('Edge Cases', () => {
 
    it('should not allow a query that passes null to `replace` if `delete` is not allowed', (done) => {
       executeQuery(get.get(1).replace(null))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /REPLACE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /REPLACE/i))
         .nodeify(done);
     });
 
    it('should not allow a query that passes null to `replace` if `delete` is not allowed', (done) => {
       executeQuery(get.replace(null))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /REPLACE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /REPLACE/i))
         .nodeify(done);
     });
 
@@ -112,13 +111,13 @@ describe('Edge Cases', () => {
 
    it('should not allow a query that passes `conflict: replace` if `replace` is not allowed', (done) => {
       executeProxyQuery(get.insert({ id: 1, name: 'Hugo'}, { conflict: 'replace' }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /INSERT/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /INSERT/i))
         .nodeify(done);
     });
 
    it('should not allow a query that passes `conflict: update` if `update` is not allowed', (done) => {
       executeProxyQuery(get.insert({ id: 1, name: 'Hugo'}, { conflict: 'update' }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /UPDATE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /UPDATE/i))
         .nodeify(done);
     });
 

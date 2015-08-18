@@ -18,7 +18,6 @@ let createDatabase = makeCreateDatabase(dbName, tableName);
 let dropDatabase = makeDropDatabase(dbName);
 let throwError = function (res) { throw new Error(); };
 let expectError = function (errorName, errorMessageMatch, err) {
-  console.log('Err.msg', errorMessageMatch, err.msg);
   if (errorMessageMatch !== null) err.msg.should.match(errorMessageMatch);
   if (errorName !== null) errorName.should.equal(err.name);
   (err instanceof Error).should.equal(true);
@@ -67,7 +66,7 @@ describe('Unallowed Queries', () => {
 
     it('should throw an error after attempting to write to the database', (done) => {
       executeProxyQuery(get.insert({ hello: 'world' }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /INSERT/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /INSERT/i))
         .nodeify(done);
     });
 
@@ -81,14 +80,14 @@ describe('Unallowed Queries', () => {
 
     it('should not allow insert queries inside `do`', (done) => {
       executeProxyQuery(r.expr([1, 2, 3]).do(function (row) { return get.insert({ name: row }); }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /INSERT/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /INSERT/i))
         .nodeify(done);
     });
 
 
     it('should not allow for write queries inside arrays', (done) => {
       executeProxyQuery(r.expr([ get.delete(), get.coerceTo('array') ]))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /DELETE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /DELETE/i))
         .nodeify(done);
     });
   });
@@ -100,7 +99,7 @@ describe('Unallowed Queries', () => {
             return get.get(row('id')).delete();
         });
       }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /DELETE/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /DELETE/i))
         .nodeify(done);
     });
   });
@@ -113,7 +112,7 @@ describe('Unallowed Queries', () => {
             return r.http('http://www.reddit.com/r/javascript.json');
         });
       }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /HTTP/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /HTTP/i))
         .nodeify(done);
     });
 
@@ -121,7 +120,7 @@ describe('Unallowed Queries', () => {
       executeProxyQuery(r.expr('hello').do((rows) => {
          return r.http('http://www.reddit.com/r/javascript.json');
       }))
-        .then(throwError, expectError.bind(null, 'RqlClientError', /HTTP/i))
+        .then(throwError, expectError.bind(null, 'ReqlDriverError', /HTTP/i))
         .nodeify(done);
     });
 
