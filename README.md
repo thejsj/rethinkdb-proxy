@@ -91,7 +91,7 @@ rethinkDBProxy({ port: 8125, allowInsert: true });
 |--------------------|-------------------------|-------------|---------------|
 | `port`             | `--port`                | `8125`      |               |
 
-Port in which to listen for driver connections
+Port in which to listen for driver connections. You should point your driver to this port.
 
 ### RethinkDB Host <a name='rdbHost'></a>
 
@@ -99,7 +99,7 @@ Port in which to listen for driver connections
 |--------------------|-------------------------|-------------|-------------------------------------------------------------|
 | `rdbHost`          | `--rdb-host`            | `localhost`     | [connect](http://www.rethinkdb.com/api/javascript/connect/) |
 
-Client Port in which RethinkDB is running
+Host in which RethinkDB is running.
 
 ### RethinkDB Port <a name='rdbPort'></a>
 
@@ -107,7 +107,7 @@ Client Port in which RethinkDB is running
 |--------------------|-------------------------|-------------|--------------------------------------------------------------|
 | `rdbPort`          | `--rdb-host`            | `localhost` | [connect](http://www.rethinkdb.com/api/javascript/connect/) |
 
-Host in which RethinkDB is running
+Host in which RethinkDB is running.
 
 ### Databases <a name='dbs'></a>
 
@@ -115,7 +115,7 @@ Host in which RethinkDB is running
 |--------------------|-------------------------|-------------|---------------|
 | `dbs`              | `--dbs`                 | `[ ]`       |               |
 
-Database to allow access to. All except `rethinkdb` allowed by default.
+Database to allow access to. By default, all database are allowed except `rethinkdb`.
 
 ### Allow System Database Access <a name='allowSysDbAccess'></a>
 
@@ -123,7 +123,8 @@ Database to allow access to. All except `rethinkdb` allowed by default.
 |--------------------|-------------------------|-------------|---------------|
 | `allowSysDbAccess` | `--allow-sys-db-access` | `false`     |               |
 
-Allow access to the `rethinkdb` database.
+Allow access to the `rethinkdb` database. This is not allowed by default, because
+access to this database allows to delete all other data.
 
 ### Tables <a name='tables'></a>
 
@@ -131,7 +132,7 @@ Allow access to the `rethinkdb` database.
 |--------------------|-------------------------|-------------|---------------|
 | `tables`           | `--tables`              | `[ ]`       |               |
 
-Tables to allow acces to. Tables must include their datatabase `db.table`      
+Tables to allow access to. Tables must include their database `db.table`.
 
 ### Allow Writes <a name='allowWrites'></a>
 
@@ -139,7 +140,7 @@ Tables to allow acces to. Tables must include their datatabase `db.table`
 |--------------------|-------------------------|-------------|---------------|
 | `allowWrites`      | `--allow-writes`        | `false`     |               |
 
-Allow all operations that write to the database (`insert`, `update`, `delete`) 
+Allow all operations that write to the database (`insert`, `update`, `delete`).
 
 ### Allow `insert` <a name='allowInsert'></a>
 
