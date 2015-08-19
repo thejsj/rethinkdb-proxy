@@ -1,6 +1,6 @@
 {
   "name": "rethinkdb-proxy",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Reverse Proxy for RethinkDB. Make your RethinkDB publicly accessible through limiting what kind of queries can be executed on your RethinkDB database.",
   "main": "lib/index.js",
   "directories": {
