@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "babel": "^5.6.23",
+    "babel-runtime": "^5.8.20",
     "cli": "^0.8.0",
     "lodash": "^3.10.0",
     "rethinkdb": "^2.1.0",
