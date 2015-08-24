@@ -1,0 +1,5 @@
+server:
+  build: .
+  ports:
+   - "8125:8125"
+  command: /app/bin/rethinkdb-proxy.js --rdbHost rethinkdb.thejsj.com --dbs test
