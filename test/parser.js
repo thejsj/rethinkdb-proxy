@@ -1,5 +1,5 @@
-import BufferParser from '../src/buffer-parser';
-import protoDef from '../node_modules/rethinkdb/proto-def'
+import BufferParser from './components/buffer-parser';
+import protoDef from '../node_modules/rethinkdb/proto-def';
 import 'should';
 
 describe('Buffer Parser', () => {
@@ -12,15 +12,17 @@ describe('Buffer Parser', () => {
       result.push(query);
     });
     let count = 0;
-    for(let value of args.values()) {
-      let token = count++;
-      let tokenBuffer = new Buffer(8);
-      tokenBuffer.writeUInt32LE(token & 0xFFFFFFFF, 0);
-      tokenBuffer.writeUInt32LE(Math.floor(token / 0xFFFFFFFF), 4);
-      let byteLengthBuffer = new Buffer(4);
-      let queryBuffer = new Buffer(JSON.stringify(value));
-      byteLengthBuffer.writeUInt32LE(queryBuffer.length, 0);
-      parser.append(Buffer.concat([tokenBuffer, byteLengthBuffer, queryBuffer]));
+    for(let key in args) {
+      if (args.hasOwnProperty(key)) {
+        let value = args[key];
+        let token = count++;
+        let tokenBuffer = new Buffer(8);
+        tokenBuffer.writeUInt32LE(Math.floor(token / 0xFFFFFFFF), 4);
+        let byteLengthBuffer = new Buffer(4);
+        let queryBuffer = new Buffer(JSON.stringify(value));
+        byteLengthBuffer.writeUInt32LE(queryBuffer.length, 0);
+        parser.append(Buffer.concat([tokenBuffer, byteLengthBuffer, queryBuffer]));
+      }
     }
     cb(result);
   };

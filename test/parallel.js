@@ -1,7 +1,7 @@
 /*jshint esnext:true */
 import r from 'rethinkdb';
 import Promise from 'bluebird';
-import RethinkDBProxy from '../src';
+import RethinkDBProxy from './components/rethinkdb-proxy';
 import should from 'should';
 import { makeExecuteQuery, makeExecuteProxyQuery, makeAssertQuery, makeCreateDatabase, makeDropDatabase } from './utils';
 import protoDef from '../node_modules/rethinkdb/proto-def';
