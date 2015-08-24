@@ -40,6 +40,31 @@ r.connect({ port: 8125 }).then((conn) => {
     });
 });
 ```
+
+## Try it!
+
+You can try out rethinkdb-proxy by connecting to a publicly available proxy at `rethinkdb-proxy.thejsj.com:8125`. 
+This database (named `test`) has two tables: `countries` and `cities`. You can 
+run queries against it to see how `rethindkb-proxy` works.
+
+**JavasScript:**
+
+```javascript
+import r from 'rethinkdb';
+r.connect({ host: 'rethinkdb-proxy.thejsj.com', port: 8125 })
+ .then(function (conn) {
+   r.table('countries').coerceTo('array').run(conn);
+ });
+```
+
+**Python:**
+
+```
+import rethinkdb as r
+conn = r.connect(host="rethinkdb.thejsj.com", port=8125)
+r.table('countries').coerce_to('array').run(conn)
+```
+
 ## Running rethinkdb-proxy
 
 #### CLI
