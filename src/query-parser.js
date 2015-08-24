@@ -157,8 +157,11 @@ export const findTermsOrErrors = (opts, terms, query) => {
     /*!
      * Check for unallowedTerms
      */
-    for (let termName of terms.values()) {
-      if(protoDef.Term.TermType[termName] === command) return termName;
+    for (let key in terms) {
+      if (terms.hasOwnProperty(key)) {
+        let termName = terms[key];
+        if(protoDef.Term.TermType[termName] === command) return termName;
+      }
     }
     if (command === protoDef.Term.TermType.MAKE_ARRAY) {
       return _.flatten(query[1].map(__findTermsOrErrors)).filter(x => x);
