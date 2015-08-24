@@ -59,7 +59,7 @@ r.connect({ host: 'rethinkdb-proxy.thejsj.com', port: 8125 })
 
 **Python:**
 
-```
+```python
 import rethinkdb as r
 conn = r.connect(host="rethinkdb-proxy.thejsj.com", port=8125)
 r.table('countries').coerce_to('array').run(conn)
@@ -71,7 +71,7 @@ r.table('countries').coerce_to('array').run(conn)
 
 rethinkdb-proxy comes with a CLI out-of-the box:
 
-```
+```javascript
 rethinkdb-proxy --port 8125 
 ```
 
@@ -79,7 +79,7 @@ rethinkdb-proxy --port 8125
 
 You can also import rethinkdb-proxy into Node.js:
 
-```
+```javascript
 import rethinkDBProxy from 'rethinkdb-proxy';
 rethinkDBProxy({ port: 8125, allowInsert: true });
 ```
