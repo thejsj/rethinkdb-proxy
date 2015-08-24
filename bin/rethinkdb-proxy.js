@@ -5,6 +5,8 @@ var RethinkDBProxy = require('../lib/');
 
 cli.parse({
   'port':               [false, 'Port in which to listen for driver connections', 'number', null],
+  'rdbHost':            [false, 'RethinkDB host to connect to', 'string', null],
+  'rdbPort':            [false, 'RethinkDB port to connect to', 'number', null],
   'dbs':                [false, 'Databases allowed', 'string', null],
   'allow-sys-db-acces': [false, 'Allow access to the `rethinkdb` system database', 'string', null],
   'tables':             [false, 'Tables allowed. Must include dot (`db.table`) if multiple database allowed.', 'string', null],
