@@ -34,7 +34,7 @@ describe('Database and Table Access', () => {
     describe('Disallow RethinkDB Database Access', () => {
 
       before(function (done) {
-        this.timeout(5000);
+        this.timeout(10000);
         createDatabase()
           .then(() => {
             return new Promise(function (resolve, reject) {
@@ -88,7 +88,7 @@ describe('Database and Table Access', () => {
     describe('Allow RethinkDB Database Access', () => {
 
       before(function (done) {
-        this.timeout(5000);
+        this.timeout(10000);
         createDatabase()
           .then(() => {
             return new Promise(function (resolve, reject) {
@@ -131,7 +131,7 @@ describe('Database and Table Access', () => {
 
   describe('Database Access', () => {
     before(function (done) {
-      this.timeout(5000);
+      this.timeout(10000);
       createDatabase()
         .then(createSecondDatabase)
         .then(() => {
@@ -221,7 +221,7 @@ describe('Database and Table Access', () => {
   describe('Table Access', () => {
 
     before(function (done) {
-      this.timeout(5000);
+      this.timeout(10000);
       createDatabase()
         .then(createSecondDatabase)
         .then(() => {
