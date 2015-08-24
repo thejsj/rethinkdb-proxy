@@ -17,7 +17,7 @@
     "compile": "npm run compile:src && npm run compile:test",
     "compile:src": "./node_modules/babel/bin/babel.js --optional runtime -d lib src",
     "compile:test": "./node_modules/babel/bin/babel.js --optional runtime -d lib-test test",
-    "prepublish": "npm run test"
+    "prepublish": "npm run compile"
   },
   "author": "thejsj",
   "license": "MIT",
