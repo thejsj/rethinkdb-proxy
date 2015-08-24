@@ -61,7 +61,7 @@ r.connect({ host: 'rethinkdb-proxy.thejsj.com', port: 8125 })
 
 ```
 import rethinkdb as r
-conn = r.connect(host="rethinkdb.thejsj.com", port=8125)
+conn = r.connect(host="rethinkdb-proxy.thejsj.com", port=8125)
 r.table('countries').coerce_to('array').run(conn)
 ```
 
