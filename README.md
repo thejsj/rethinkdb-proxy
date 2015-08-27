@@ -16,7 +16,7 @@ RethinkDB.
 
  - [Introduction by Example](#introduction-by-example-)
  - [Try it!](#try-it-)
- - [Installation](#instalation)
+ - [Installation](#installation)
  - [Running `rethinkdb-proxy`](#running-rethinkdb-proxy-)
  - [Options](#options-)
  - [The Future](#the-future-)
@@ -80,7 +80,7 @@ conn = r.connect(host="rethinkdb-proxy.thejsj.com", port=8125)
 r.table('countries').coerce_to('array').run(conn)
 ```
 
-### Installation
+## Installation
 
 Install rethinkdb-proxy through [npm](https://www.npmjs.com/package/rethinkdb-proxy).
 
