@@ -14,12 +14,12 @@ with access to a running instance has access to everything, including system tab
 This is a simple solution to that problem that allows for limited access to 
 RethinkDB. 
 
- - [Introduction by Example](#intro)
- - [Try it!](#try-it)
- - [Running `rethinkdb-proxy`](#running)
- - [Options](#options)
- - [The Future](#future)
- - [License](#licencse)
+ - [Introduction by Example](#introduction-by-example-)
+ - [Try it!](#try-it-)
+ - [Running `rethinkdb-proxy`](#running-rethinkdb-proxy-)
+ - [Options](#options-)
+ - [The Future](#the-future-)
+ - [License](#license-)
 
 ## Introduction by Example <a name='intro'></a>
 
@@ -310,7 +310,7 @@ Allow queries with the `http` term.
 
 Allow queries with the `js` term.
 
-### The Future  <a name='future'></a>
+### The Future <a name='future'></a>
 
 As of right now, there are many features that could be added to rethinkdb-proxy.
 If you have any suggestions, please [submit an issue](https://github.com/thejsj/rethinkdb-proxy/issues).
@@ -322,7 +322,7 @@ future might include:
  - More robust access control (permissions per database, per table)
  - Options stored in the database
 
-### License <a name='licencse'></a>
+### License <a name='license'></a>
 
 Copyright (c) 2015, [Jorge Silva](mailto:jorge.silva@thejsj.com).
 
