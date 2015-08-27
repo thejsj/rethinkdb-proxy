@@ -3,11 +3,11 @@
 [x] README
   [x] Wrap allow around code
   [x] Add api links to docs
-[ ] Errors 
-  [ ] Add error handling for non-rethinkdb driver connections
-  [ ] Keep server running on error
-  [ ] It should handle queries that throw errors
-  [ ] Fix `ECONNRESET` bugs
+[x] Errors 
+  [x] Add error handling for non-rethinkdb driver connections
+  [x] Keep server running on error
+  [x] It should handle queries that throw errors
+  [x] Fix `ECONNRESET` bugs
 
 ## Future
 

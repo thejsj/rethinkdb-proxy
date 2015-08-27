@@ -5,9 +5,23 @@
 
 *Reverse proxy for RethinkDB*
 
-Make your RethinkDB publicly accessible through limiting what kind of queries can be executed on your RethinkDB database.
+Make your RethinkDB publicly accessible through limiting what kind of queries 
+can be executed on your RethinkDB database. 
 
-## Introduction by Example
+Currently, RethinkDB has no access control (although they're currently 
+[working on it](https://github.com/rethinkdb/rethinkdb/issues/4519)). Anyone
+with access to a running instance has access to everything, including system tables. 
+This is a simple solution to that problem that allows for limited access to 
+RethinkDB. 
+
+ - [Introduction by Example](#intro)
+ - [Try it!](#try-it)
+ - [Running `rethinkdb-proxy`](#running)
+ - [Options](#options)
+ - [The Future](#future)
+ - [License](#licencse)
+
+## Introduction by Example <a name='intro'></a>
 
 First, start the proxy.
 
@@ -41,7 +55,7 @@ r.connect({ port: 8125 }).then((conn) => {
 });
 ```
 
-## Try it!
+## Try it! <a name='try-it'></a>
 
 You can try out rethinkdb-proxy by connecting to a publicly available proxy at `rethinkdb-proxy.thejsj.com:8125`. 
 This database (named `test`) has two tables: `countries` and `cities`. You can 
@@ -65,7 +79,7 @@ conn = r.connect(host="rethinkdb-proxy.thejsj.com", port=8125)
 r.table('countries').coerce_to('array').run(conn)
 ```
 
-## Running rethinkdb-proxy
+## Running rethinkdb-proxy <a name='running'></a>
 
 #### CLI
 
@@ -84,7 +98,7 @@ import rethinkDBProxy from 'rethinkdb-proxy';
 rethinkDBProxy({ port: 8125, allowInsert: true });
 ```
 
-## Options
+## Options <a name='options'></a>
 
  - [`port`](#port)
  - [`rdbHost`](#rdbHost)
@@ -148,8 +162,9 @@ Database to allow access to. By default, all database are allowed except `rethin
 |--------------------|-------------------------|-------------|---------------|
 | `allowSysDbAccess` | `--allow-sys-db-access` | `false`     |               |
 
-Allow access to the `rethinkdb` database. This is not allowed by default, because
-access to this database allows to delete all other data.
+Allow access to the `rethinkdb` database. This is not allowed by default because
+access to this database allows the user to delete all other data, cancel jobs, 
+mess with the cluster, etc.
 
 ### Tables <a name='tables'></a>
 
@@ -295,3 +310,24 @@ Allow queries with the `http` term.
 
 Allow queries with the `js` term.
 
+### The Future  <a name='future'></a>
+
+As of right now, there are many features that could be added to rethinkdb-proxy.
+If you have any suggestions, please [submit an issue](https://github.com/thejsj/rethinkdb-proxy/issues).
+If enough people use this, I'd be happy to implement them. Features for the 
+future might include:
+
+ - Access from the front-end, Firebase style (through http and/or websockets)
+ - Authentication/User accounts (perhaps integration with Github/OAuth)
+ - More robust access control (permissions per database, per table)
+ - Options stored in the database
+
+### License <a name='licencse'></a>
+
+Copyright (c) 2015, [Jorge Silva](mailto:jorge.silva@thejsj.com).
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
