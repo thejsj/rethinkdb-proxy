@@ -1,4 +1,4 @@
-/*jshint esnext:true */
+/*jshint esnext:true, bitwise:false */
 import 'babel/polyfill';
 import net from 'net';
 import protoDef from 'rethinkdb/proto-def';
@@ -58,6 +58,19 @@ export default class RethinkDBProxy {
     };
   }
 
+  makeSendError (clientSocket) {
+    let sendResponseToClient = this.makeSendResponse(clientSocket);
+    return function (token, message) {
+      let response = {
+        t: protoDef.Response.ResponseType.CLIENT_ERROR,
+        b: [],
+        n: [],
+        r: [message]
+      };
+      sendResponseToClient(response, token);
+    };
+  }
+
   connectionHandler (clientSocket) {
 
     this.__connections.push(clientSocket);
@@ -67,6 +80,7 @@ export default class RethinkDBProxy {
     let serverSocket = net.connect(this.opts.rdbPort, this.opts.rdbHost);
     let sendResponseToServer = this.makeSendResponse(serverSocket);
     let sendResponseToClient = this.makeSendResponse(clientSocket);
+    let sendError = this.makeSendError(clientSocket);
 
     /*!
      * Listeners
@@ -88,17 +102,14 @@ export default class RethinkDBProxy {
       let protocolBuffer = new Buffer(4);
       protocolBuffer.writeUInt32LE(protoProtocol, 0);
       let token = Buffer.concat([versionBuffer, authLengthBuffer, authBuffer, protocolBuffer]);
+      if (protoProtocol !== protoDef.VersionDummy.Protocol.JSON) {
+        sendError(token, 'Proxy Error: Only JSON protocol allowed.');
+      }
       serverSocket.write(token);
     });
 
     parser.on('error', (token) => {
-      let response = {
-        t: protoDef.Response.ResponseType.CLIENT_ERROR,
-        b: [],
-        n: [],
-        r: ['Proxy Error: Could not parse query correctly.']
-      };
-      sendResponseToClient(response, token);
+      sendError('Proxy Error: Could not parse query correctly.');
     });
 
     parser.on('query', (query, token) => {
@@ -112,13 +123,7 @@ export default class RethinkDBProxy {
         } else {
           errorMessage = 'Cannot execute query. \"' + termsFound + '\" query not allowed.';
         }
-        let response = {
-          t: protoDef.Response.ResponseType.CLIENT_ERROR,
-          b: [],
-          n: [],
-          r: [errorMessage]
-        };
-        return sendResponseToClient(response, token);
+        sendError(token, errorMessage);
       }
       return sendResponseToServer(query, token);
     });

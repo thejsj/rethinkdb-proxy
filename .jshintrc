@@ -23,7 +23,6 @@
 
   "eqnull": true,
   "esnext": true,
-  "no-unused-expressions": false,
 
   "node": true,
   "globals": {

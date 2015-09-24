@@ -55,7 +55,7 @@ describe('Database and Table Access', function () {
     describe('Disallow RethinkDB Database Access', function () {
 
       before(function (done) {
-        this.timeout(5000);
+        this.timeout(10000);
         createDatabase().then(function () {
           return new _bluebird2['default'](function (resolve, reject) {
             server = new _componentsRethinkdbProxy2['default']({
@@ -96,7 +96,7 @@ describe('Database and Table Access', function () {
     describe('Allow RethinkDB Database Access', function () {
 
       before(function (done) {
-        this.timeout(5000);
+        this.timeout(10000);
         createDatabase().then(function () {
           return new _bluebird2['default'](function (resolve, reject) {
             server = new _componentsRethinkdbProxy2['default']({
@@ -130,7 +130,7 @@ describe('Database and Table Access', function () {
 
   describe('Database Access', function () {
     before(function (done) {
-      this.timeout(5000);
+      this.timeout(10000);
       createDatabase().then(createSecondDatabase).then(function () {
         return new _bluebird2['default'](function (resolve, reject) {
           server = new _componentsRethinkdbProxy2['default']({
@@ -196,7 +196,7 @@ describe('Database and Table Access', function () {
   describe('Table Access', function () {
 
     before(function (done) {
-      this.timeout(5000);
+      this.timeout(10000);
       createDatabase().then(createSecondDatabase).then(function () {
         return new _bluebird2['default'](function (resolve, reject) {
           server = new _componentsRethinkdbProxy2['default']({
