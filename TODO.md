@@ -56,6 +56,3 @@
   [x] `insert` with `conflict: update`. `allowUpdate` must be allowed.
   [x] `replace` with `null` deletes the document.
   [x] `replace` with `r.literal`: Throws error.
-
-
-#
