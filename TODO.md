@@ -3,7 +3,7 @@
 [x] README
   [x] Wrap allow around code
   [x] Add api links to docs
-[ ] Errors 
+[ ] Errors
   [ ] Add error handling for non-rethinkdb driver connections
   [ ] Keep server running on error
   [ ] It should handle queries that throw errors
