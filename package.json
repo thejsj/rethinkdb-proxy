@@ -12,7 +12,7 @@
   "scripts": {
     "test:es6": "export NODE_ENV='test_es6' && ./node_modules/mocha/bin/mocha --compilers js:babel/register ./test/index.js",
     "test": "export NODE_ENV='test' && npm run compile && ./node_modules/mocha/bin/mocha lib-test/index.js",
-    "dev": "./node_modules/nodemon/bin/nodemon.js --exec babel-node -- ./index.js",
+    "dev": "./node_modules/nodemon/bin/nodemon.js --exec babel-node -- ./src/index.js",
     "start": "node index.js",
     "compile": "npm run compile:src && npm run compile:test",
     "compile:src": "./node_modules/babel/bin/babel.js --optional runtime -d lib src",
@@ -30,6 +30,7 @@
   "dependencies": {
     "babel": "^5.6.23",
     "babel-runtime": "^5.8.20",
+    "bunyan": "^1.5.1",
     "cli": "^0.8.0",
     "lodash": "^3.10.0",
     "rethinkdb": "^2.1.0",

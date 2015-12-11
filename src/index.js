@@ -5,12 +5,14 @@ import protoDef from 'rethinkdb/proto-def';
 import BufferParser from './buffer-parser';
 import { findTermsOrErrors } from './query-parser';
 import optionsParser from './options-parser';
+import Logger from './logger.js';
 
 export default class RethinkDBProxy {
 
   constructor (opts) {
     // Set defaults and unallowedTerms
     this.opts = optionsParser(opts);
+    this.logger = new Logger(opts.inLevel, opts.outLevel, opts.sysLevel);
     this.__connections = [];
     this.server = net.createServer(this.connectionHandler.bind(this));
     return this;
@@ -18,11 +20,13 @@ export default class RethinkDBProxy {
 
   listen (cb) {
     return new Promise((resolve, reject) => {
-      this.server.listen(this.opts.port, function (err) {
+      this.server.listen(this.opts.port, (err) => {
         if (err) {
+          this.logger.sys.info({ err: err, port: this.opts.port }, 'Error tryingg to listen for traffic');
           if (typeof cb === 'function') cb(err);
           reject(err);
         }
+        this.logger.sys.info({ port: this.opts.port }, 'server.listen');
         if (typeof cb === 'function') cb();
         resolve();
       });
@@ -31,12 +35,15 @@ export default class RethinkDBProxy {
 
   close (cb) {
     return new Promise((resolve, reject) => {
-      this.server.close(function () {
+      this.server.close(() => {
+        this.logger.sys.info('server.close');
         if (typeof cb === 'function') cb();
         resolve();
       });
       setTimeout(() => {
+        this.logger.sys.info('Server closing all connections');
         this.__connections.forEach(function (conn) {
+          this.logger.sys.trace({ conn: conn }, 'conn.destroy');
           conn.destroy();
         });
       }, 100);
@@ -45,6 +52,10 @@ export default class RethinkDBProxy {
 
   makeSendResponse (socket) {
     return (response, token) => {
+      this.logger.out.info({
+        token: token,
+        response: response
+      }, 'Send Response');
       let tokenBuffer = new Buffer(8);
       tokenBuffer.writeUInt32LE(token & 0xFFFFFFFF, 0);
       tokenBuffer.writeUInt32LE(Math.floor(token / 0xFFFFFFFF), 4);
@@ -60,13 +71,18 @@ export default class RethinkDBProxy {
 
   makeSendError (clientSocket) {
     let sendResponseToClient = this.makeSendResponse(clientSocket);
-    return function (token, message) {
+    return (token, message) => {
       let response = {
         t: protoDef.Response.ResponseType.CLIENT_ERROR,
         b: [],
         n: [],
         r: [message]
       };
+      this.logger.out.info({
+        message: message,
+        response: response,
+        token: token
+      }, 'Send Error');
       sendResponseToClient(response, token);
     };
   }
@@ -86,6 +102,9 @@ export default class RethinkDBProxy {
      * Listeners
      */
     serverSocket.on('data', (buff) => {
+      this.logger.out.info({
+        buffer: buff.toString(),
+      }, 'Data received');
       if (buff.toString() === 'SUCCESS') clientSocket.connected = true;
       // NOTE: The socket might try to write something even if the connection
       // is closed
@@ -94,6 +113,11 @@ export default class RethinkDBProxy {
     });
 
     parser.on('connect', (version, authKey, protoProtocol) => {
+      this.logger.in.info({
+        version: version,
+        authKey: authKey,
+        protoProtocol: protoProtocol
+      }, 'parser.on.connect');
       let versionBuffer = new Buffer(4);
       versionBuffer.writeUInt32LE(version, 0);
       let authBuffer = new Buffer(authKey, 'ascii');
@@ -109,10 +133,17 @@ export default class RethinkDBProxy {
     });
 
     parser.on('error', (token) => {
+      this.logger.in.error({
+        token: token,
+      }, 'parser.on.error');
       sendError('Proxy Error: Could not parse query correctly.');
     });
 
     parser.on('query', (query, token) => {
+      this.logger.in.info({
+        query: query,
+        token: token,
+      }, 'parser.on.query');
       let termsFound = findTermsOrErrors(this.opts, this.opts.unallowedTerms, query);
       if (termsFound.length > 0) {
         // This shouldn't throw an error. It should
@@ -123,12 +154,19 @@ export default class RethinkDBProxy {
         } else {
           errorMessage = 'Cannot execute query. \"' + termsFound + '\" query not allowed.';
         }
+        this.logger.in.warn({
+          termsFound: termsFound,
+          errorMessage: errorMessage,
+        }, 'parser.on.query Error');
         sendError(token, errorMessage);
       }
       return sendResponseToServer(query, token);
     });
 
-    clientSocket.on('data', function (data) {
+    clientSocket.on('data', (data) => {
+      this.logger.in.trace({
+        data: data,
+      }, 'clientSocket.on.data');
       return parser.append(data);
     });
   }
