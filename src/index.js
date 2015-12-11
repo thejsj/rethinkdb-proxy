@@ -42,7 +42,7 @@ export default class RethinkDBProxy {
       });
       setTimeout(() => {
         this.logger.sys.info('Server closing all connections');
-        this.__connections.forEach(function (conn) {
+        this.__connections.forEach((conn) => {
           this.logger.sys.trace({ conn: conn }, 'conn.destroy');
           conn.destroy();
         });
